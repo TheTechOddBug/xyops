@@ -1,5 +1,18 @@
 # xyOps Changelog
 
+## Version v1.0.16
+
+> March 3, 2026
+
+- [`5907309`](https://github.com/pixlcore/xyops/commit/590730985ad05f33c82c62110dc51f11739c2a88): Version 1.0.16
+- [`c63e99a`](https://github.com/pixlcore/xyops/commit/c63e99a2ab1bcea2f106b899d4055464711b9877): Feature: Show previous event titles and revision numbers in search results and job detail pages.  Fixes #170.  WIP.
+- [`7ee4588`](https://github.com/pixlcore/xyops/commit/7ee45886386d59e6973c308d9f187304e7431e19): Bug Fix: Bulk deleting jobs tried to delete non-existent job logs causing storage log error noise.
+- [`92d6eb8`](https://github.com/pixlcore/xyops/commit/92d6eb8b144b9264ba59532ee9ca0f786f663ee9): UI Bug Fix: Deleting event caused a race condition with update event.
+- [`d7793fa`](https://github.com/pixlcore/xyops/commit/d7793fa256c03fbcd1833a0a76b50d2f3b64e209): Feature: Add "Export..." button inside revision dialog, so you can export any historical revision in XYPDF format.  Fixes #173.
+- [`01ca56d`](https://github.com/pixlcore/xyops/commit/01ca56de1b1d5386452f8c7cdccd065c71cfc75b): Feature: Add last job completed date/time as tooltip hover on event status labels.  Fixes #172.
+- [`4aca9db`](https://github.com/pixlcore/xyops/commit/4aca9db6c36407e195f9736a0600930dcda699f5): Marketplace Plugins: Do not allow direct editing, as it complicates upgrades.  Instead, allow marketplace plugins to be "cloned" for local changes.  Fixes #178.
+- [`8a8606b`](https://github.com/pixlcore/xyops/commit/8a8606bc51989534209922e0a761ea074767ed75): SSO: Change group role delimiter to simple character (default comma), and allow customization via SSO.group_role_separator.  Fixes #177.
+
 ## Version v1.0.15
 
 > March 2, 2026
