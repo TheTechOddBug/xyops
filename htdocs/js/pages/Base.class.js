@@ -2025,6 +2025,19 @@ Page.Base = class Base extends Page {
 			event.schedules = schedules;
 			event.ranges = triggers.filter( function(trigger) { return (trigger.type == 'range') || (trigger.type == 'blackout'); } );
 			event.plugin_trigger = find_object( triggers, { type: 'plugin', enabled: true } );
+			event.day_limits = find_objects( event.limits || [], { type: 'day', enabled: true } ) || [];
+			
+			// add deep copies of event stats and state, so we can manip them
+			event.stats = deep_copy_object( get_path( app.stats.currentDay, 'events.' + event.id ) || {} );
+			event.state = deep_copy_object( get_path( app.state, 'events.' + event.id ) || {} );
+			
+			// if we have day_limits, we need a formatter for the server timezone (whew!)
+			if (event.day_limits.length && !opts.formatters[ app.config.tz ]) {
+				opts.formatters[ app.config.tz ] = new Intl.DateTimeFormat('en-US', 
+					{ year: 'numeric', month: '2-digit', day: 'numeric', weekday: 'long', hour: 'numeric', minute: '2-digit', hourCycle: 'h23', timeZone: app.config.tz }
+				);
+			}
+			
 			return true;
 		} ); // filter events
 		
@@ -2070,11 +2083,18 @@ Page.Base = class Base extends Page {
 				tzargs[tz].rday = (tzargs[tz].day - app.getLastDayInMonth( tzargs[tz].year, tzargs[tz].month )) - 1;
 			}
 			
+			// keep track of day rollovers for day_limits
+			var is_server_midnight = false;
+			if (tzargs[app.config.tz] && (tzargs[app.config.tz].hour == 0) && (tzargs[app.config.tz].minute == 0)) is_server_midnight = true;
+			
 			// do any events need to run this minute?
 			// { "type": "schedule", "enabled": true, "years": [2023], "months": [3, 4, 5], "days": [1, 15], "weekdays": [1, 2, 3, 4, 5], "hours": [6, 7, 8, 9, 10], "minutes": [15, 45] }
 			opts.events.forEach( function(event) {
 				var scheduled = false;
 				var extras = {};
+				
+				// reset stats at server midnight (simulated)
+				if (is_server_midnight) event.stats = {};
 				
 				event.schedules.forEach( function(trigger) {
 					if ((trigger.type == 'single') && (trigger.epoch == opts.epoch)) {
@@ -2123,12 +2143,24 @@ Page.Base = class Base extends Page {
 				
 				if (!scheduled) return;
 				
+				// check day limits
+				event.day_limits.forEach( function(limit) {
+					var count = event.stats[ 'job_' + limit.condition ] || 0;
+					if (limit.amount && (count >= limit.amount)) scheduled = false;
+				} );
+				
+				if (!scheduled) return;
+				
 				// add plugin modifier if applicable
 				if (event.plugin_trigger) extras.plugin = event.plugin_trigger.plugin_id;
 				
 				// add job!
 				opts.jobs.push({ event: event.id, epoch: opts.epoch, type: scheduled, ...extras });
 				
+				// simulate event stat increments (used by day_limits)
+				event.stats.job_start = (event.stats.job_start || 0) + 1;
+				event.stats.job_complete = (event.stats.job_complete || 0) + 1;
+				event.stats.job_success = (event.stats.job_success || 0) + 1;
 			} ); // foreach event
 			
 			opts.epoch += 60; // skip to next minute
