@@ -384,21 +384,18 @@ var writeJSONFile = exports.writeJSONFile = function writeJSONFile( args, callba
 	fs.writeFile( file, json, callback );
 };
 
-var generateSecretKey = exports.generateSecretKey = function generateSecretKey( args, callback ) {
-	// generate random secret key for a specified JSON config file
-	// use regular expression to preserve natural file format
-	var file = args.file;
-	var key = args.key;
-	var regex = new RegExp('(\\"'+Tools.escapeRegExp(key)+'\\"\\s*\\:\\s*\\")(.*?)(\\")');
-	var secret_key = Tools.generateUniqueID(32);
+var generateInitialSecretKey = exports.generateInitialSecretKey = function generateInitialSecretKey( args, callback ) {
+	// generate random secret key for a specified JSON overrides file
+	var file = args.file || 'conf/overrides.json';
+	var secret_key = Tools.generateUniqueBase64();
 	
-	fs.readFile(file, 'utf8', function(err, text) {
-		if (err) return callback(err);
-		if (!text.match(regex)) return callback( new Error("Could not locate key to replace: " + file + ": " + key) );
-		
-		text = text.replace(regex, '$1' + secret_key + '$3');
-		fs.writeFile( file, text, callback );
-	});
+	// skip if file exists (do not replace)
+	if (fileExistsSync(file)) return callback();
+	
+	// only do this on first install
+	if (fileExistsSync('htdocs/index.html')) return callback();
+	
+	fs.writeFile(file, JSON.stringify({ secret_key }, null, "\t") + "\n", callback );
 };
 
 var addToServerStartup = exports.addToServerStartup = function addToServerStartup( args, callback ) {

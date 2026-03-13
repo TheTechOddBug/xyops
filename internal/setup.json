@@ -826,6 +826,7 @@
 		],
 		"dist": [
 			[ "copyDir", "sample_conf", "conf", { "exclusive": true } ],
+			[ "generateInitialSecretKey", { "file": "conf/overrides.json" } ],
 			{
 				"action": "bundleCompress",
 				"minify": {
