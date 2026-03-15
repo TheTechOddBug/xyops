@@ -1,5 +1,18 @@
 # xyOps Changelog
 
+## Version v1.0.27
+
+> March 15, 2026
+
+- [`a918c6f`](https://github.com/pixlcore/xyops/commit/a918c6f18a414c13f186354c576ed8695332c062): Version 1.0.27
+- [`3ae2cb7`](https://github.com/pixlcore/xyops/commit/3ae2cb7cc83bb3edeb0cbff37706bd85dc17e617): Marketplace: Add "Report" button.
+- [`903617b`](https://github.com/pixlcore/xyops/commit/903617bff8daa043fabb670fc626f358566cc729): Marketplace Markdown UI: Try to fix relative links to files inside Plugin repos.
+- [`6eb2267`](https://github.com/pixlcore/xyops/commit/6eb22670b99eefa02a8f440b27a822d700e976ef): Markdown UI Tweak: Do not decorate links with icons if they contain inline HTML (i.e. for Marketplace shield icons).
+- [`4de736c`](https://github.com/pixlcore/xyops/commit/4de736cb1cc5f993c63c0af8c3ac3979b15c2beb): UI Tweak: Channel Notifications: Do not auto-hide toasts (these are generally for high severity issues).
+- [`e06e75a`](https://github.com/pixlcore/xyops/commit/e06e75af69079c72176815fe9451ab291d9c7f6e): Alerts: Fix bug where alert message text was missing from web hook args in some cases (race condition).
+- [`ca2fe09`](https://github.com/pixlcore/xyops/commit/ca2fe095c9ce6c69ecf090c93b88c231da9d7d8e): Bug Fix: Channel notification sent from alerts (configured to send to specific users) crashes the conductor.  Fixes #197.
+- [`b10b988`](https://github.com/pixlcore/xyops/commit/b10b988b60062f741158bfff127dd27e17960bed): Config Doc: Add User.use_csrf property.
+
 ## Version v1.0.26
 
 > March 14, 2026
