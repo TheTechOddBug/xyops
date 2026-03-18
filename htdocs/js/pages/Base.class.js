@@ -407,10 +407,11 @@ Page.Base = class Base extends Page {
 		// pick default icon based on event attributes
 		if (item.type == 'workflow') {
 			default_icon = 'clipboard-flow-outline';
+			if (find_object(item.actions || [], { type: 'run_event', enabled: true })) default_icon = 'clipboard-arrow-right-outline';
 			if (!item.enabled) default_icon = 'clipboard-outline';
 		}
 		else {
-			if (find_object(item.actions || [], { type: 'run_event', enabled: true })) default_icon = 'file-link-outline';
+			if (find_object(item.actions || [], { type: 'run_event', enabled: true })) default_icon = 'file-send-outline';
 			if (!item.enabled) default_icon = 'file-outline';
 		}
 		
