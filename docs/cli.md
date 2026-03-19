@@ -59,7 +59,17 @@ Lost access to your admin account?  You can create a new temporary administrator
 
 Replace `USERNAME` with the desired username, and `PASSWORD` with the desired password for the new account.  Note that the new user will not show up in the main list of users in the UI.  But you will be able to login using the provided credentials.  This is more of an emergency operation, just to allow you to get back into the system.  *This is not a good way to create permanent users*.  Once you are logged back in, you should consider creating another account from the UI, then deleting the emergency admin account.
 
-Note that this trick does **not** work with [SSO](sso.md).  It only applies to setups that use the built-in user management system.
+For recovering an admin account in a containerized environment, you can use the following environment variable:
+
+```
+XYOPS_recover_admin="USERNAME:PASSWORD"
+```
+
+This will create the specified emergency administrator account on next startup (when the conductor becomes primary).  Note that as with the CLI method, the new user will not show up in the main list of users in the UI.  But you will be able to login using the provided credentials.  This is more of an emergency operation, just to allow you to get back into the system.  *This is not a good way to create permanent users*.  Once you are logged back in, you should consider creating another account from the UI, then deleting the emergency admin account.
+
+Also, don't forget to remove the environment variable, or else xyOps will keep recreating the account on each restart!
+
+Note that recovering admin access does **not** work with [SSO](sso.md).  It only applies to setups that use the built-in user management system.  If you lose access to your SSO IdP, you can disable SSO in the xyOps config, then use the above commands to regain admin access.
 
 ## Server Startup
 
@@ -130,3 +140,8 @@ This is a low-level developer tool, and requires advanced knowledge of the datab
 - The `/opt/xyops/internal/unbase.json` file, which describes all the database tables in xyOps.
 - The [Unbase](https://github.com/jhuckaby/pixl-server-unbase) database system which powers xyOps.
 - The [query syntax](https://github.com/jhuckaby/pixl-server-storage/blob/master/docs/Indexer.md#simple-queries) documentation.
+
+## Docker
+
+When running xyOps in a Docker container, the best way to get shell access for command-line use is by restarting the container with "bash" on the end of the command:
+
