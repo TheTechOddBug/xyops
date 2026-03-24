@@ -83,7 +83,13 @@ Grab the `XYOPS_setup` environment variable from the install command, and replac
 http://YOUR_XYOPS_SERVER:5522/api/app/satellite/config?t=YOUR_API_KEY_HERE
 ```
 
-You can now use this to spin up as many Docker workers as you want.  Just specify your new URL with API Key as the `XYOPS_setup` environment variable, and use the official `ghcr.io/pixlcore/xysat:latest` Docker image.  Here is an example using Docker Compose:
+You can now use this to spin up as many Docker workers as you want.  Just specify your new URL with API Key as the `XYOPS_setup` environment variable, and use the official `ghcr.io/pixlcore/xysat:latest` Docker image.  Make sure to add a bind mount for the configuration file, so it will survive container image upgrades:
+
+```sh
+-v ./xysat-config.json:/opt/xyops/satellite/config.json
+```
+
+Here is an example using Docker Compose:
 
 ```yaml
 services:
@@ -93,6 +99,7 @@ services:
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+	  - ./worker1-config.json:/opt/xyops/satellite/config.json
     environment:
       XYOPS_setup: http://YOUR_XYOPS_SERVER:5522/api/app/satellite/config?t=YOUR_API_KEY_HERE
 
@@ -102,6 +109,7 @@ services:
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+	  - ./worker2-config.json:/opt/xyops/satellite/config.json
     environment:
       XYOPS_setup: http://YOUR_XYOPS_SERVER:5522/api/app/satellite/config?t=YOUR_API_KEY_HERE
 
@@ -111,11 +119,14 @@ services:
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+	  - ./worker3-config.json:/opt/xyops/satellite/config.json
     environment:
       XYOPS_setup: http://YOUR_XYOPS_SERVER:5522/api/app/satellite/config?t=YOUR_API_KEY_HERE
 ```
 
-All workers can use the same exact `XYOPS_setup` value and API Key.  Each request generates a new unique Server ID and permanent Auth Token.
+All workers can use the same exact `XYOPS_setup` value and API Key.  Each request generates a new unique Server ID and permanent Auth Token, which are stored in the config file.
+
+Note that the `XYOPS_setup` bootstrap process is only needed for the first launch of new containers.  If the config file exists, the setup process is silently skipped.
 
 ## Groups and Auto-Assignment
 
