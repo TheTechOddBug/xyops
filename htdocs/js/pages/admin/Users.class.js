@@ -255,17 +255,6 @@ Page.Users = class Users extends Page.PageUtils {
 		// edit user subpage
 		this.loading();
 		
-		// setup upload system
-		ZeroUpload.setURL( '/api/app/admin_upload_avatar' );
-		ZeroUpload.setMaxFiles( 1 );
-		ZeroUpload.setMaxBytes( 1 * 1024 * 1024 ); // 1 MB
-		ZeroUpload.setFileTypes( "image/jpeg", "image/png", "image/gif" );
-		ZeroUpload.on('start', this.upload_start.bind(this) );
-		ZeroUpload.on('progress', this.upload_progress.bind(this) );
-		ZeroUpload.on('complete', this.upload_complete.bind(this) );
-		ZeroUpload.on('error', this.upload_error.bind(this) );
-		ZeroUpload.init();
-		
 		app.api.post( 'user/admin_get_user', { username: args.username }, this.receive_user.bind(this), this.fullPageError.bind(this) );
 	}
 	
@@ -327,71 +316,6 @@ Page.Users = class Users extends Page.PageUtils {
 	
 	go_edit_history() {
 		Nav.go( '#ActivityLog?action=users&query=' + this.user.username );
-	}
-	
-	upload_avatar() {
-		// upload profile pic using ZeroUpload
-		ZeroUpload.chooseFiles({}, {
-			csrf_token: app.csrf_token || '',
-			username: this.user.username
-		});
-	}
-	
-	upload_start(files, userData) {
-		// avatar upload has started
-		Dialog.showProgress( 0.0, "Uploading image..." );
-		Debug.trace('avatar', "Upload started");
-	}
-	
-	upload_progress(progress) {
-		// avatar is on its way
-		Dialog.showProgress( progress.amount );
-		Debug.trace('avatar', "Upload progress: " + progress.pct);
-	}
-	
-	upload_complete(response, userData) {
-		// avatar upload has completed
-		Dialog.hideProgress();
-		Debug.trace('avatar', "Upload complete!", response.data);
-		
-		var data = null;
-		try { data = JSON.parse( response.data ); }
-		catch (err) {
-			app.doError("Image Upload Failed: JSON Parse Error: " + err);
-		}
-		
-		if (data && (data.code != 0)) {
-			app.doError("Image Upload Failed: " + data.description);
-		}
-		
-		var avatar_url = '/api/app/avatar/' + this.user.username + '.png?size=128&random=' + Math.random();
-		$('#d_eu_image').css( 'background-image', 'url(' + avatar_url + ')' );
-		
-		this.triggerEditChange();
-	}
-	
-	upload_error(type, message, userData) {
-		// avatar upload error
-		Dialog.hideProgress();
-		app.doError("Image Upload Failed: " + message);
-	}
-	
-	delete_avatar() {
-		// delete user avatar
-		var self = this;
-		
-		app.api.post( 'app/admin_delete_avatar', {
-			username: this.user.username
-		}, 
-		function(resp) {
-			// finished deleting
-			if (!self.active) return; // sanity
-			
-			var avatar_url = '/api/app/avatar/' + self.user.username + '.png?size=128&random=' + Math.random();
-			$('#d_eu_image').css( 'background-image', 'url(' + avatar_url + ')' );
-			
-			self.triggerEditChange();
-		} );
 	}
 	
 	do_save_user() {
