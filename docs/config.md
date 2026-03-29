@@ -449,6 +449,11 @@ This URL string points to the release metadata for the satellite agent (default:
 
 This URL string is the base for satellite downloads/upgrades (default: `https://github.com/pixlcore/xysat/releases`).
 
+### satellite.image
+<!-- Title: xySat Docker Image -->
+
+This is the Docker image to use when adding Docker-based satellite servers via the UI (default: `ghcr.io/pixlcore/xysat`).
+
 ### satellite.version
 <!-- Title: xySat Version -->
 
@@ -457,7 +462,7 @@ This string sets the desired satellite version to fetch; may be a semver or tag 
 ### satellite.cache_ttl
 <!-- Title: Cache Time-to-Live (seconds) -->
 
-This number (seconds) sets the cache TTL for satellite release metadata to reduce network calls (default: `3600`).
+This number (seconds) sets the cache TTL for satellite release metadata and tarballs to reduce network calls (default: `3600`).
 
 ### satellite.config
 <!-- Title: xySat Configuration -->
