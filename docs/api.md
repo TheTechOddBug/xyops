@@ -5066,7 +5066,7 @@ In addition to the [Standard Response Format](#standard-response-format), this i
 
 ## Administrative
 
-Administrative APIs provide system-wide maintenance and export/import utilities intended for administrators. Use them to bulk import/export data, manage configuration, and perform maintenance tasks. These endpoints are admin-only and all operations are audited in the activity log.
+Administrative APIs provide system-wide maintenance and export/import utilities intended for administrators. Use them to bulk import/export data, manage configuration, and perform maintenance tasks. These endpoints are admin-only (unless otherwise specified) and all write operations are audited in the activity log.
 
 ### get_servers
 
@@ -5074,7 +5074,7 @@ Administrative APIs provide system-wide maintenance and export/import utilities 
 GET /api/app/get_servers/v1
 ```
 
-Fetch a live snapshot of all connected worker servers and conductor/peer servers. Admin only.
+Fetch a live snapshot of all connected worker servers and conductor/peer servers. Requires a valid user session or API key.
 
 No input parameters.
 
@@ -5103,7 +5103,7 @@ Example response:
 GET /api/app/get_global_state/v1
 ```
 
-Fetch the in-memory conductor [State](data.md#state) object. This includes runtime flags (e.g., scheduler enabled), watches, and other internal state used by the conductor. Admin session or API Key is required.
+Fetch the in-memory conductor [State](data.md#state) object. This includes runtime flags (e.g., scheduler enabled), watches, and other internal state used by the conductor. Requires a valid user session or API key.
 
 No input parameters.
 
@@ -5737,7 +5737,7 @@ Example response:
 
 
 
-## xyOps Satellite
+## Satellite
 
 These APIs handle xySat bootstrap, install, upgrade, and release discovery.  Unlike most xyOps APIs, the `satellite` endpoint family serves plain-text scripts, tarballs, and JSON config files rather than the standard JSON response envelope on success.
 
