@@ -1050,7 +1050,22 @@ Page.Job = class Job extends Page.PageUtils {
 			}
 			else {
 				// job complete
-				tds = [
+				if (job.deleted) {
+					var args = self.getJobResultArgs(job);
+					job.icon = 'trash-can-outline';
+					tds = [
+						self.getNiceJob(job, false),
+						self.getNiceJobEvent(job, false),
+						self.getNiceCategory(job.category, false),
+						self.getNiceServer(job.server, false),
+						'(Deleted)',
+						self.getNiceJobElapsedTime(job, false),
+						'(' + args.text + ')',
+						'(Deleted)'
+					];
+					tds.className = 'disabled';
+				}
+				else tds = [
 					'<b>' + self.getNiceJob(job, true) + '</b>',
 					self.getNiceJobEvent(job, true),
 					self.getNiceCategory(job.category, true),
@@ -1223,7 +1238,7 @@ Page.Job = class Job extends Page.PageUtils {
 				$elem.off('dblclick').on( 'dblclick', function(event) {
 					// double-click event node == jump to first job
 					var job = self.wfJobRows.find( function(row) {
-						return row.workflow && row.workflow.node && (row.workflow.node == node.id);
+						return row.workflow && row.workflow.node && (row.workflow.node == node.id) && !row.deleted;
 					} );
 					if (job) Nav.go( '#Job?id=' + job.id );
 				}); // dblclick (nodes)
@@ -3021,6 +3036,7 @@ Page.Job = class Job extends Page.PageUtils {
 			
 			app.api.post( 'app/delete_job', { id: job.id }, function(resp) {
 				Dialog.hideProgress();
+				app.cacheBust = hires_time_now();
 				app.showMessage('success', "Job ID &ldquo;" + job.id + "&rdquo; was deleted successfully.");
 				
 				if (!self.active) return; // sanity

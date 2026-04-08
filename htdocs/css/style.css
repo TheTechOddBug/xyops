@@ -1133,6 +1133,10 @@ div.header_title.error {
 	top: 4px;
 }
 
+body.dark .data_grid ul.disabled div {
+	opacity: 0.4;
+}
+
 tr.tr_event_category td {
 	padding-top: 10px;
 	font-size: 14px;
