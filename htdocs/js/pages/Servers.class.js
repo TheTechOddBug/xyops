@@ -1848,6 +1848,8 @@ Page.Servers = class Servers extends Page.ServerUtils {
 	updateServerStats() {
 		// stats updated, redraw select grid elements
 		var server = this.server;
+		if (!server) return; // sanity
+		
 		var stats = app.stats.currentDay.servers[server.id] || {};
 		
 		// jobs completed today
@@ -1872,6 +1874,7 @@ Page.Servers = class Servers extends Page.ServerUtils {
 	updateSnapshotData(snapshot) {
 		// new snapshot from server (every minute), update graphs and tables
 		this.snapshot = snapshot;
+		if (!this.server) return; // sanity
 		
 		// uptime
 		this.div.find('#d_vs_stat_uptime').html( this.getNiceUptime(snapshot.data.uptime_sec) );
@@ -1934,6 +1937,7 @@ Page.Servers = class Servers extends Page.ServerUtils {
 		// servers were updated (add or removed) -- check if OUR server was affected
 		var server = this.server;
 		var snapshot = this.snapshot;
+		if (!server) return; // sanity
 		
 		if (this.online && !app.servers[server.id]) {
 			// our server went offline!
