@@ -1164,7 +1164,7 @@ Page.PageUtils = class PageUtils extends Page.Base {
 			current_day: 1
 		};
 		
-		if (this.alert) opts.path += '.alerts.' + this.alert.id;
+		if (this.alert && this.alert.alert) opts.path += '.alerts.' + this.alert.alert;
 		else if (this.server) opts.path += '.servers.' + this.server.id;
 		else if (this.group) opts.path += '.groups.' + this.group.id;
 		else opts.path += '.transactions';
