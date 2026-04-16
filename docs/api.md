@@ -985,9 +985,18 @@ Event APIs define jobs to run (what, when, and how). Use them to list, fetch, cr
 GET /api/app/get_events/v1
 ```
 
-Fetch all event definitions. No input parameters are required. No specific privilege is required beyond a valid user session or API Key.
+Fetch all event definitions, or optionally filter the results. No specific privilege is required beyond a valid user session or API Key.
 
-In addition to the [Standard Response Format](#standard-response-format), this will include a `rows` array containing all events, and a `list` object containing list metadata (e.g. `length` for total rows without pagination).
+By default all events are returned.  To limit the results to specific criteria, specify any top-level [Event](data.md#event) properties as GET or POST parameters.  Here is an example request which fetches all enabled events that are using built-in Shell Plugin:
+
+```json
+{
+	"enabled": true,
+	"plugin": "shellplug"
+}
+```
+
+In addition to the [Standard Response Format](#standard-response-format), this will include a `rows` array containing all events, and a `list` object containing list metadata (e.g. `length` for total rows without pagination).  The `list.length` response property always reflects the total event count, regardless of filtering.
 
 Example response:
 
