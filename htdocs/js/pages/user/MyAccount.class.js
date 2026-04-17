@@ -70,7 +70,7 @@ Page.MyAccount = class MyAccount extends Page.Base {
 					label: 'Sync Enabled',
 					checked: user.sync
 				}),
-				caption: 'Your user is managed by a 3rd party authentication system.  Check this box to automatically keep your name, email and avatar in sync on every login.  Uncheck it if you want to customize them here.'
+				caption: 'Your user is managed by a 3rd party authentication system.  Check this box to automatically keep your name and email in sync on every login.  Uncheck it if you want to customize them here.'
 			});
 		}
 		
