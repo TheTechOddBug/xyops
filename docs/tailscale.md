@@ -43,13 +43,21 @@ Tailscale can forward along what they call "capabilities", which can translate t
 2. Click on the "Access Controls" tab.
 3. Click on "JSON Editor".
 
-Locate the `grants` array in the JSON editor, or create it if needed.  Here is an example:
+First, create a new tag called `tag:xyops` and add it into the `tagOwners` section.  Example:
+
+```json
+"tagOwners": {
+	"tag:xyops": ["your-email@domain.com"]
+}
+```
+
+Next, locate the `grants` array in the JSON editor, or create it if needed.  Add the following grant into the array:
 
 ```json
 "grants": [
 	{
 		"src": ["autogroup:admin"],
-		"dst": ["autogroup:admin"],
+		"dst": ["tag:xyops"],
 		"app": {
 			"xyops.io/cap/ts": [ {"privileges": ["admin"], "roles": []} ],
 		}
@@ -127,6 +135,8 @@ tailscale serve --accept-app-caps=xyops.io/cap/ts 5522
 ```
 
 The special `--accept-app-caps=xyops.io/cap/ts` argument tells Tailscale to forward the special `Tailscale-App-Capabilities` HTTP header with all incoming requests, which xyOps uses to apply user privileges and roles (see [Capabilities](#capabilities) above).
+
+Before trying to load the app in a browser, go to your [Machine List](https://login.tailscale.com/admin/machines) in your Tailscale Admin Console, and add the `tag:xyops` tag to the machine hosting xyOps.
 
 Note that the first time you visit your Tailscale-provided secure HTTPS URL for your served app, there may be a short delay as Tailscale provisions the TLS certificate.  If you receive a timeout error, please wait a few seconds and refresh.  This is normal.
 
@@ -281,7 +291,9 @@ Type this command to start everything up (the `-d` switch runs it in the backgro
 docker compose up -d
 ```
 
-And then visit your `TS_HOST` URL in your favorite browser.  Example:
+Before trying to load the app in a browser, go to your [Machine List](https://login.tailscale.com/admin/machines) in your Tailscale Admin Console, and add the `tag:xyops` tag to the new machine.  You can also disable the expiry here as well.
+
+Finally, visit your `TS_HOST` URL in your favorite browser.  Example:
 
 https://xyops.taild89302.ts.net/
 
