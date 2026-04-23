@@ -411,7 +411,7 @@ Page.Plugins = class Plugins extends Page.PageUtils {
 					this.buildOptGroup(app.groups, config.ui.menu_bits.wf_targets_groups, 'server-network'),
 					this.buildServerOptGroup(config.ui.menu_bits.wf_targets_servers, 'router-network')
 				),
-				value: ''
+				value: app.getPref('tep_target') || ''
 			}),
 			caption: "Select a server or group to run the plugin test."
 		});
@@ -448,6 +448,7 @@ Page.Plugins = class Plugins extends Page.PageUtils {
 			
 			var target = $('#fe_epd_target').val();
 			if (!target) return app.badField('#fe_epd_target', "Please select a target server or group to run the test on.");
+			app.setPref('tep_target', target);
 			
 			var params = self.getPluginParamValues( plugin.id );
 			if (!params) return; // invalid
@@ -586,7 +587,7 @@ Page.Plugins = class Plugins extends Page.PageUtils {
 					{ id: 'critical', title: 'Critical', icon: 'fire-alert' },
 					{ id: 'abort', title: 'Abort', icon: 'cancel' }
 				],
-				value: ''
+				value: app.getPref('tap_result') || ''
 			}),
 			caption: "Select which job result to simulate for the action."
 		});
@@ -604,6 +605,7 @@ Page.Plugins = class Plugins extends Page.PageUtils {
 			
 			var result = $('#fe_epd_result').val();
 			if (!result) return app.badField('#fe_epd_result', "Please select a job result to simulate.");
+			app.setPref('tap_result', result);
 			
 			var params = self.getPluginParamValues( plugin.id );
 			if (!params) return; // invalid
@@ -691,7 +693,7 @@ Page.Plugins = class Plugins extends Page.PageUtils {
 			content: this.getFormMenuSingle({
 				id: 'fe_epd_server',
 				options: servers,
-				value: '',
+				value: app.getPref('tmp_server') || '',
 				default_icon: 'router-network'
 			}),
 			caption: "Select a server to test your monitor plugin on."
@@ -718,6 +720,7 @@ Page.Plugins = class Plugins extends Page.PageUtils {
 		$('#fe_epd_server').on('change', function() {
 			var server_id = $(this).val();
 			if (!server_id) return; // sanity
+			app.setPref('tmp_server', server_id);
 			
 			$('#d_ex_tree > .ex_tree_inner').html('<div class="loading_container"><div class="loading"></div></div>');
 			
