@@ -53,6 +53,12 @@ In addition to the standard JEXL operators, the following custom functions are a
 | `encode` | `encode("a b") == "a%20b` | Calls [encodeURIComponent](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent) to encode a string. |
 | `stringify` | `stringify(obj) == "{...}"` | Calls [JSON.stringify](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify) to serialize an object into a string. |
 
+### Other
+
+| Function | Usage | Description |
+|----------|-------|-------------|
+| `server` | `server("smog7ph67nvh6891z") == "myhostname.domain.com"` | Resolve a server ID to a label or hostname. |
+
 ## See Also
 
 - [Monitor Expressions](monitors.md#expressions)
