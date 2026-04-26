@@ -900,6 +900,12 @@ If the [Job.state](#job-state) is `queued`, this property will indicate what pos
 
 While the job is running, i.e. in the data passed to the Event Plugin on the remote server, the job object will contain a `serverData` property.  This will be a copy of the [Server.userData](#server-userdata) object, if applicable for the current server.
 
+### Job.workflowData
+
+While the job is running, i.e. in the data passed to the Event Plugin on the remote server, the job object may contain a `workflowData` property, if the job is a workflow sub-job.  This object will contain user-specified data that is shared across all sub-jobs in the workflow.
+
+Any workflow sub-job can also write to this data by specifying a populated `workflowData` object in their output.  The new data will be shallow-merged with the existing workflow data, upon the sub-job's completion.
+
 ### Job.invisible
 
 If set to `true`, the job is running invisibly to the UI.  See [Quiet Trigger](triggers.md#quiet) for details.
