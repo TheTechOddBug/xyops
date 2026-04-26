@@ -176,7 +176,7 @@ Repeat, Multiplex and Split support a "continue after controller" flow:
 Example: Event A → Repeat (x10) → Event A has a `continue` wire → Event B. After all 10 runs of Event A finish, if at least N% succeed (per controller), Event B runs.
 
 
-## Data Passing Between Nodes
+## Passing Data Between Nodes
 
 Inputs and outputs are automatically passed along:
 
@@ -198,6 +198,20 @@ Split specifics:
 - The Split controller resolves its data path against the previous job context (or incoming input).
 - If the path is `files`, each incoming file is sent to a separate sub-job; otherwise, each array element becomes `input.data = { item: ... }` for the launched sub-job.
 
+## Sharing Data Between All Nodes
+
+xyOps offers another way to share data between nodes, including nodes that are not directly connected.  There is a special shared [workflowData](data.md#job-workflowdata) object which is passed to all sub-jobs when they launch.  This works similarly to [Server User Data](servers.md#user-data).  The idea is, each sub-job can read from this object, and also write back to it by including a `workflowData` object in its output.  Example:
+
+```json
+{ "xy": 1, "workflowData": { "foo": "bar" } }
+```
+
+The data is shallow-merged into the shared `workflowData` object when the sub-job completes.  Then, any subsequent jobs that launch from the same workflow are passed the updated `workflowData` object.
+
+The `workflowData` object only lasts for the duration of the workflow run.  It is not persistent like [Server User Data](servers.md#user-data), but it works in the same way.
+
+> [!TIP]
+> If you launch your workflow via the [run_event](api.md#run_event) API, you can prepopulate the `workflowData` object by simply including it in the API call as a top-level JSON property.
 
 ## Event vs Job Nodes
 
