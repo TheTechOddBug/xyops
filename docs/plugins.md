@@ -126,6 +126,24 @@ First, all job input files are automatically written out to the job's unique tem
 
 So you can also discover and iterate over your input files by accessing this data structure.
 
+##### Environment Variables
+
+When Event Plugins are invoked via a job launching, they are passed a set of environment variables.  These provide a convenient way to read event parameters and input data without having to parse the JSON sent to STDIN.  Here is a list of the variables provided to each running job:
+
+| Variable Name | Description |
+|---------------|-------------|
+| `XYOPS` | Will be set to the current xySat version. |
+| `JOB_ID` | Will contain the current [Job.id](data.md#job-id). |
+| `JOB_NOW` | Will contain the current [Job.now](data.md#job-now). |
+| `JOB_BASE_URL` | Will contain the current [Job.base_url](data.md#job-base_url). |
+| `data_*` | All top-level properties from the [Job.input.data](data.md#job-input) object are included as environment variables, with a `data_` prefix. |
+| `workflow_*` | All [workflow parameters](data.md#jobworkflow.params) (user fields) are included as environment variables, with a `workflow_` prefix. |
+| `workflow_data_*` | All top-level properties from the [Job.workflowData](data.md#job-workflowdata) object are included as environment variables, with a `workflow_data_` prefix. |
+| `server_data_*` | All top-level properties from the [Job.serverData](data.md#job-serverdata) object are included as environment variables, with a `server_data_` prefix. |
+| *(Event Param IDs)* | All event parameters are passed as environment variables with the param IDs used as variable names. |
+| *(Secrets)* | All assigned [Secret Vault](secrets.md) variables are included as environment variables. |
+| *(Job Env)* | All properties from the [job_env](config.md#job_env) global configuration object are included as environment variables. |
+
 #### Job Output
 
 Your Plugin is expected to write JSON to STDOUT in order to report status back to the xyOps primary conductor.  At the very least, you need to notify xyOps that the job was completed, and the result of the job (i.e. success or fail).  This is done by printing a JSON object with a `xy` property set to `1` (indicating the [xyOps Wire Protocol](xywp.md) version), and a `code` property set to `0` indicating success.  You need to make sure the JSON is compacted onto a single line, and ends with a single EOL character (`\n` on Unix).  Example:
