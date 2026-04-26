@@ -163,7 +163,7 @@ You can also set defaults for the max jobs per server at the group level, so you
 
 ## User Data
 
-xyOps can store arbitrary data with each server, which is called the "user data".  This is a freeform object stored as JSON, which can contain any data you want (including nested objects / arrays).  The user data is automatically passed to all running jobs on the server, and can also be used for custom event targeting.
+xyOps can store arbitrary data with each server, which is called the "user data".  This is a freeform object stored as JSON, which can contain any data you want (including nested objects / arrays).  The user data is automatically passed to all running jobs on the server (see [Job.serverData](data.md#job-serverdata)), and can also be used for custom event targeting.
 
 You can add or update the server data in a number of ways:
 
