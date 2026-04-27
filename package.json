@@ -1,6 +1,6 @@
 {
 	"name": "xyops",
-	"version": "1.0.49",
+	"version": "1.0.50",
 	"private": true,
 	"description": "A complete workflow automation and server monitoring system.",
 	"author": "Joseph Huckaby <jhuckaby@pixlcore.com>",
@@ -58,7 +58,7 @@
 		"pixl-chart": "^1.0.27",
 		"pixl-class-util": "^1.0.0",
 		"pixl-cli": "^1.0.11",
-		"pixl-config": "^1.0.9",
+		"pixl-config": "^1.0.15",
 		"pixl-logger": "^2.0.0",
 		"pixl-mail": "^1.1.7",
 		"pixl-perf": "^1.0.6",
