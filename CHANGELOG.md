@@ -1,5 +1,27 @@
 # xyOps Changelog
 
+## Version v1.0.50
+
+> April 27, 2026
+
+- [`401ab94`](https://github.com/pixlcore/xyops/commit/401ab942608468273023894dc80257593efff6d6): Version 1.0.50
+	- Bump pixl-config to v1.0.15 for improved startup IP sniffing logic.
+- [`b1812e5`](https://github.com/pixlcore/xyops/commit/b1812e5b29482a3eeac02e4cac1fa4d60cf45d6b): Job User Content: Improve macro expansion, include `base_app_url` in context object.
+- [`c50856b`](https://github.com/pixlcore/xyops/commit/c50856bc251be4bac6cb5639cf000c5dc13c7a18): Servers Doc: Typo in automated docker workers sample docker compose YAML env vars.  Fixes #281.
+- [`1e85581`](https://github.com/pixlcore/xyops/commit/1e85581506170f6462d0bafe1162859c11098925): Bug fix: Ad-hoc plugin tests using incorrect property for Event ID.
+- [`27fad37`](https://github.com/pixlcore/xyops/commit/27fad37065f57fccc5ee3f8a491658597df2bd7e): Feature: If job user content (markdown, text or html) to contains placeholder macros, expand them.
+- [`a72b2d5`](https://github.com/pixlcore/xyops/commit/a72b2d5147b2a2fa7c7d069b0edf5949cb03699f): Feature: New workflowData object to share data between all nodes in a workflow.
+- [`e5c6d04`](https://github.com/pixlcore/xyops/commit/e5c6d04168455cd75d17848ec72893d6bbc7bef9): JEXL: Add `server()` helper function for resolving a server ID into a title (label or hostname).
+- [`936594b`](https://github.com/pixlcore/xyops/commit/936594b8acb3394a7d9b3202bf91b1f509d35bd9): Actions: Prevent crash if email action is missing a users array (both job and alert actions).
+- [`cee5d41`](https://github.com/pixlcore/xyops/commit/cee5d415ab8efda9e019fbe46147049a40e9187a): Workflows Doc: Add section on sharing data between nodes
+- [`94fcca5`](https://github.com/pixlcore/xyops/commit/94fcca511fea2484d440beb028bc39d8342c7582): Servers Doc: Add link to serverData definition in section about user data.
+- [`11afaf7`](https://github.com/pixlcore/xyops/commit/11afaf7613bed9ff14c802bb493be36443037fe9): Plugins Doc: Add section on event plugin environment variables
+- [`2139a7e`](https://github.com/pixlcore/xyops/commit/2139a7eaf1b607f213e03654a85cfea4883a70e3): Data Doc: Add section on Job.workflowData
+- [`704c186`](https://github.com/pixlcore/xyops/commit/704c186cdbea76f1a46a4b143bff47e145986709): Plugin UI: Save state of key menus in test plugin dialogs.
+- [`53036de`](https://github.com/pixlcore/xyops/commit/53036deaff51b0794c6236d0d8e381cbb901ec39): Privileges Doc: Add note regarding removal of all privs to create a read-only user.  Ref discussion #275.
+- [`e139b5b`](https://github.com/pixlcore/xyops/commit/e139b5b91c8ecc722a7ecf0ee30246655d6f08c5): Default Privileges: Handle case where priv properties are set to false (treat as missing).
+- [`2d71525`](https://github.com/pixlcore/xyops/commit/2d7152541292b7fca146118df41c505e999c67a4): Tailscale Doc: Add steps to create and apply a tag, to properly isolate the app capabilities grant.  Fixes #273.
+
 ## Version v1.0.49
 
 > April 22, 2026
