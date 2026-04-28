@@ -805,6 +805,9 @@ Page.Marketplace = class Marketplace extends Page.PageUtils {
 			version: ver
 		};
 		
+		var pruned_new_obj = { ...obj };
+		if (product.type == 'plugin') delete pruned_new_obj.script;
+		
 		var title = `Confirm ${thing} Installation`;
 		var do_replace = false;
 		var prefix = opts.name.match(/^[aeiou]/i) ? 'an' : 'a';
@@ -831,14 +834,27 @@ Page.Marketplace = class Marketplace extends Page.PageUtils {
 			delete pruned_old_obj.modified;
 			delete pruned_old_obj.revision;
 			delete pruned_old_obj.sort_order;
+			if (product.type == 'plugin') delete pruned_old_obj.script;
 			
-			var diff_html = this.getDiffHTML( pruned_old_obj, obj ) || '(No changes)';
-			md += "\n### Diff to Current Version:\n\n";
+			var diff_html = this.getDiffHTML( pruned_old_obj, pruned_new_obj ) || '(No changes)';
+			md += `\n### ${thing} JSON Diff:\n\n`;
 			md += '<div class="diff_content">' + diff_html + '</div>' + "\n";
+			
+			if ((product.type == 'plugin') && old_obj.script && obj.script) {
+				var diff_html = this.getDiffHTML( old_obj.script, obj.script ) || '(No changes)';
+				md += `\n### ${thing} Script Diff:\n\n`;
+				md += '<div class="diff_content">' + diff_html + '</div>' + "\n";
+			}
 		} // do_replace
 		
 		md += `\n### ${thing} JSON:\n`;
-		md += "\n```json\n" + JSON.stringify(obj, null, "\t") + "\n```\n";
+		md += "\n```json\n" + JSON.stringify(pruned_new_obj, null, "\t") + "\n```\n";
+		
+		if ((product.type == 'plugin') && obj.command && obj.script) {
+			md += `\n### ${thing} Script:\n`;
+			var lang = app.getLangFromBinary(obj.command) || '';
+			md += "\n```" + lang + "\n" + obj.script.trim() + "\n```\n";
+		}
 		
 		var html = '';
 		html += '<div class="code_viewer scroll_shadows">';

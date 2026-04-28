@@ -2788,8 +2788,8 @@ Page.Base = class Base extends Page {
 	
 	getDiffHTML(old_obj, new_obj, verbose) {
 		// get HTML for diff
-		var old_text = stablePrettyStringify( old_obj || {} );
-		var new_text = stablePrettyStringify( new_obj || {} );
+		var old_text = (typeof(old_obj) == 'object') ? stablePrettyStringify( old_obj || {} ) : String(old_obj);
+		var new_text = (typeof(new_obj) == 'object') ? stablePrettyStringify( new_obj || {} ) : String(new_obj);
 		var changes = Diff.diffLines( old_text, new_text );
 		var html = '';
 		
