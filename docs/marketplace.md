@@ -44,6 +44,8 @@ Your Plugin will need to be able to self-download and self-launch using a combo 
 - [go run](https://pkg.go.dev/cmd/go#hdr-Compile_and_run_Go_program) - If your Plugin is written in Go, use `go run` which can download and run your Plugin using one command.
 - [docker run](https://docs.docker.com/reference/cli/docker/container/run/) - If your Plugin ships as a docker container on a public container registry, then use `docker run`.
 
+Alternatively, you can ship your Plugin with an "inline" script, meaning it will run directly without using a combo wrapper.  See [Inline](#inline) below for details.
+
 ### npx
 
 Here is an example command using `npx`.  The `-y` flag skips the user prompt.
@@ -99,6 +101,17 @@ docker run --rm -i ghcr.io/myorg/xyplug-example:1.0.0
 ```
 
 The `--rm` switch makes the container ephemeral, and the `-i` switch enables STDIN to pass into the entrypoint inside the container.
+
+### Inline
+
+You can optionally ship your Plugin as an inline script, without the need for a CLI installer wrapper.  In this case you would specify the launch command for your language runtime (e.g. `node`, `python`, `go`, `bash`, etc.), and then include your full script source in the `script` property.  Example:
+
+```json
+"command": "node",
+"script": "console.log(JSON.stringify({ xy:1, code:0 }));"
+```
+
+This method only works when your script ships as a single, standalone file, and has no dependencies besides the language runtime itself.
 
 ## Export Plugin Data
 
