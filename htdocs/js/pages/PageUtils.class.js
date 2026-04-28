@@ -536,6 +536,7 @@ Page.PageUtils = class PageUtils extends Page.Base {
 			delete obj.sort_order;
 			obj.username = app.username;
 			
+			var thing = ucfirst(opts.name);
 			var title = 'Import ' + opts.name;
 			var do_replace = false;
 			var prefix = opts.name.match(/^[aeiou]/i) ? 'an' : 'a';
@@ -551,7 +552,17 @@ Page.PageUtils = class PageUtils extends Page.Base {
 				md += "\n" + `> [!IMPORTANT]\n> The ${opts.name} you are importing has **active triggers**.  If you proceed, it may **automatically run** sometime in the future.` + "\n";
 			}
 			
-			md += "\n```json\n" + JSON.stringify(obj, null, "\t") + "\n```\n";
+			var pruned_new_obj = { ...obj };
+			if (opts.name == 'plugin') delete pruned_new_obj.script;
+			
+			md += `\n### ${thing} JSON:\n`;
+			md += "\n```json\n" + JSON.stringify(pruned_new_obj, null, "\t") + "\n```\n";
+			
+			if ((opts.name == 'plugin') && obj.command && obj.script) {
+				md += `\n### ${thing} Script:\n`;
+				var lang = app.getLangFromBinary(obj.command) || '';
+				md += "\n```" + lang + "\n" + obj.script.trim() + "\n```\n";
+			}
 			
 			var html = '';
 			html += '<div class="code_viewer scroll_shadows">';
