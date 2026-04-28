@@ -385,7 +385,7 @@ Page.Marketplace = class Marketplace extends Page.PageUtils {
 	}
 	
 	getNiceProductRequires(reqs) {
-		return reqs.map( req => this.getNiceProductReq(req) ).join(', ');
+		return reqs.map( req => this.getNiceProductReq(req) ).join(', ') || '(None)';
 	}
 	
 	doViewProduct(elem) {
