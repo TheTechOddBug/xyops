@@ -583,7 +583,7 @@
 			},
 			"d_wfd_split": {
 				"label": "Split Expression:",
-				"caption": "Specify the path to the array for splitting, using `dot.path.notation`."
+				"caption": "Specify the path to the array for splitting, using `dot.path.notation`.  Use the special `files` keyword to split the input files."
 			},
 			"d_wfd_if": {
 				"label": "Expression:",
