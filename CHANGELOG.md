@@ -1,5 +1,15 @@
 # xyOps Changelog
 
+## Version v1.0.52
+
+> May 3, 2026
+
+- [`f4a8c23`](https://github.com/pixlcore/xyops/commit/f4a8c231f5e8b37b17e54b03fa4c93ddd6dc7a2a): Version 1.0.52
+- [`7d064ea`](https://github.com/pixlcore/xyops/commit/7d064ea663d492d9cefe88f8f4804dc1ed0dd66b): Feature: Visually indicate when xyOps and xySat are up to date, on the conductor and server pages, respectfully.
+- [`ecedffe`](https://github.com/pixlcore/xyops/commit/ecedffec6a9a824f2a98b29f986b899a6d29c808): Feature: Add optional `disable_version_checks` flag in both satellite and multi configs.
+- [`5fdbd7b`](https://github.com/pixlcore/xyops/commit/5fdbd7b9a363e373fcb444e4a5f842ad749da62c): Workflow UI: Show warning toast if selected event node is a sub-workflow that is missing a manual trigger node.
+- [`7792647`](https://github.com/pixlcore/xyops/commit/779264749f94d13953c784b9ec799c5776bf1112): Feature: Show inherited actions and limits in workflow nodes.
+
 ## Version v1.0.51
 
 > April 30, 2026
