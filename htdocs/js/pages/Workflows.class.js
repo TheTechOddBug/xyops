@@ -1604,6 +1604,12 @@ Page.Workflows = class Workflows extends Page.Events {
 			var event_id = $('#fe_wfde_event').val();
 			var event = find_object( app.events, { id: event_id } );
 			$('#d_wfde_param_editor').html( self.getParamEditor( event.fields, params, true ) ).buttonize();
+			
+			// show warning if sub-workflow has no enabled manual trigger
+			if (event.workflow && !find_object(event.triggers, { type: 'manual', enabled: true })) {
+				app.showMessage('warning', `The workflow &ldquo;${event.title}&rdquo; has no manual trigger enabled.`, 8);
+			}
+			
 			Dialog.autoResize();
 		}
 		
