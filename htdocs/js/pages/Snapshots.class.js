@@ -412,7 +412,9 @@ Page.Snapshots = class Snapshots extends Page.ServerUtils {
 		html += '<div class="box">';
 			html += '<div class="box_title">';
 				html += 'Snapshot Summary';
-				html += '<div class="button right danger phone_collapse" onClick="$P().showDeleteSnapshotDialog()"><i class="mdi mdi-trash-can-outline">&nbsp;</i><span>Delete...</span></div>';
+				if (app.hasPrivilege('delete_snapshots')) {
+					html += '<div class="button right danger phone_collapse" onClick="$P().showDeleteSnapshotDialog()"><i class="mdi mdi-trash-can-outline">&nbsp;</i><span>Delete...</span></div>';
+				}
 				html += '<div class="clear"></div>';
 			html += '</div>'; // title
 			
@@ -869,7 +871,9 @@ Page.Snapshots = class Snapshots extends Page.ServerUtils {
 			html += '<div class="box_title">';
 				html += 'Group Snapshot Summary';
 				
-				html += '<div class="button right danger" onClick="$P().showDeleteSnapshotDialog()"><i class="mdi mdi-trash-can-outline">&nbsp;</i>Delete...</div>';
+				if (app.hasPrivilege('delete_snapshots')) {
+					html += '<div class="button right danger" onClick="$P().showDeleteSnapshotDialog()"><i class="mdi mdi-trash-can-outline">&nbsp;</i>Delete...</div>';
+				}
 				// html += '<div class="button secondary right" onClick="$P().do_edit_from_view()"><i class="mdi mdi-file-edit-outline">&nbsp;</i>Edit Event...</div>';
 				// html += '<div class="button right" onClick="$P().do_run_from_view()"><i class="mdi mdi-run-fast">&nbsp;</i>Run Now</div>';
 				html += '<div class="clear"></div>';

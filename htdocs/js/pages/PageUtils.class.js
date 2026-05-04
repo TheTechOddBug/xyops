@@ -832,7 +832,7 @@ Page.PageUtils = class PageUtils extends Page.Base {
 			}
 			
 			nice_countdown = '<i class="mdi mdi-clock-outline">&nbsp;</i>' + get_text_from_seconds_round( countdown );
-			nice_skip = '<button class="link danger" onClick="$P().doSkipUpcomingJob(' + idx + ')"><b>Skip Job...</b></button>';
+			nice_skip = app.hasPrivilege('edit_events') ? `<button class="link danger" onClick="$P().doSkipUpcomingJob(${idx})"><b>Skip Job...</b></button>` : '-';
 			
 			var tds = [
 				'<b>' + self.getNiceEvent(job.event, true) + '</b>',

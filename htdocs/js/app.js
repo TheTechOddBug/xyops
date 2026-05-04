@@ -495,12 +495,6 @@ app.extend({
 		if (!this.hasAnyPrivilege('create_tags', 'edit_tags', 'delete_tags')) $('#tab_Tags').removeClass('enabled').hide();
 		if (!this.hasAnyPrivilege('create_buckets', 'edit_buckets', 'delete_buckets')) $('#tab_Buckets').removeClass('enabled').hide();
 		
-		// shortcuts
-		if (!this.hasPrivilege('create_tickets')) $('#tab_NewTicket').removeClass('enabled').hide();
-		if (!this.hasPrivilege('create_events')) $('#tab_NewEvent').removeClass('enabled').hide();
-		if (!this.hasPrivilege('create_events')) $('#tab_NewWorkflow').removeClass('enabled').hide();
-		if (!this.hasPrivilege('add_servers')) $('#tab_NewServer').removeClass('enabled').hide();
-		
 		// admin section
 		if (!this.hasAnyPrivilege('create_alerts', 'edit_alerts', 'delete_alerts')) $('#tab_AlertSetup').removeClass('enabled').hide();
 		if (!this.hasAnyPrivilege('create_channels', 'edit_channels', 'delete_channels')) $('#tab_Channels').removeClass('enabled').hide();
@@ -519,6 +513,7 @@ app.extend({
 			$('#tab_Marketplace').removeClass('enabled').hide();
 			$('#tab_Config').removeClass('enabled').hide();
 			$('#tab_LogViewer').removeClass('enabled').hide();
+			$('#tab_Conductors').removeClass('enabled').hide();
 		}
 		
 		// apply user preferences for sidebar sections
@@ -531,13 +526,19 @@ app.extend({
 			else $sect.removeClass('enabled').hide();
 		} );
 		
+		// shortcuts
+		if (!this.hasPrivilege('create_tickets')) $('#tab_NewTicket').removeClass('enabled').hide();
+		if (!this.hasPrivilege('create_events')) $('#tab_NewEvent').removeClass('enabled').hide();
+		if (!this.hasPrivilege('create_events')) $('#tab_NewWorkflow').removeClass('enabled').hide();
+		if (!this.hasPrivilege('add_servers')) $('#tab_NewServer').removeClass('enabled').hide();
+		
 		// possibly hide entire admin section
 		if ($('#d_sidebar_admin_group > .section > .section_item.enabled').length) $('#d_sidebar_admin_group').show();
 		else $('#d_sidebar_admin_group').hide();
 		
 		// possibly hide entire shortcuts section if all items are hidden
-		if ($('.sidebar > section.sbs_shortcuts > .section_item.enabled').length) $('.sidebar > section_title.sbs_shortcuts, .sidebar > section.sbs_shortcuts').show();
-		else $('.sidebar > section_title.sbs_shortcuts, .sidebar > section.sbs_shortcuts').hide();
+		if ($('.sidebar > .section.sbs_shortcuts > .section_item.enabled').length) $('.sidebar > .section_title.sbs_shortcuts, .sidebar > .section.sbs_shortcuts').show();
+		else $('.sidebar > .section_title.sbs_shortcuts, .sidebar > .section.sbs_shortcuts').hide();
 		
 		// add hint to body tag for admin UI hints
 		if (this.isAdmin()) $('body').addClass('admin');

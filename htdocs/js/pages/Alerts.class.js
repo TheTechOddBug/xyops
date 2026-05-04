@@ -413,7 +413,9 @@ Page.Alerts = class Alerts extends Page.PageUtils {
 					if (app.hasPrivilege('edit_tickets')) {
 						html += '<div class="button icon secondary mobile_hide" title="Add to Ticket..." onClick="$P().doAddToTicket()"><i class="mdi mdi-text-box-search-outline"></i></div>';
 					}
-					html += '<div class="button icon danger" title="Delete Alert..." onClick="$P().showDeleteAlertDialog()"><i class="mdi mdi-trash-can-outline"></i></div>';
+					if (app.hasPrivilege('delete_alerts')) {
+						html += '<div class="button icon danger" title="Delete Alert..." onClick="$P().showDeleteAlertDialog()"><i class="mdi mdi-trash-can-outline"></i></div>';
+					}
 				html += '</div>';
 			html += '</div>'; // box_title
 			

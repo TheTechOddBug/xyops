@@ -325,8 +325,8 @@ Page.Events = class Events extends Page.PageUtils {
 			var cat = cat_map[ item.category ] || { title: item.category };
 			
 			var actions = [];
-			actions.push( `<button class="link" data-event="${item.id}" onClick="$P().do_run_event_from_list(this)"><b>Run</b></button>` );
-			actions.push( `<button class="link" data-event="${item.id}" onClick="$P().do_edit_event_from_list(this)"><b>Edit</b></button>` );
+			if (app.hasPrivilege('run_jobs')) actions.push( `<button class="link" data-event="${item.id}" onClick="$P().do_run_event_from_list(this)"><b>Run</b></button>` );
+			if (app.hasPrivilege('edit_events')) actions.push( `<button class="link" data-event="${item.id}" onClick="$P().do_edit_event_from_list(this)"><b>Edit</b></button>` );
 			actions.push( `<button class="link" data-event="${item.id}" onClick="$P().go_hist_from_list(this)"><b>History</b></button>` );
 			
 			var tds = [
@@ -672,8 +672,12 @@ Page.Events = class Events extends Page.PageUtils {
 				else html += `${thing} Summary`;
 				
 				// html += '<div class="button right danger" onClick="$P().show_delete_event_dialog()"><i class="mdi mdi-trash-can-outline">&nbsp;</i>Delete...</div>';
-				html += '<div class="button default right phone_collapse" onClick="$P().do_edit_from_view()" title="' + edit_btn_text + '"><i class="mdi mdi-file-edit-outline">&nbsp;</i><span>' + edit_btn_text + '</span></div>';
-				if (event.enabled) html += '<div class="button secondary right mobile_collapse" onClick="$P().do_run_current_event()" title="Run Now..." ><i class="mdi mdi-run-fast">&nbsp;</i><span>Run Now...</span></div>';
+				if (app.hasPrivilege('edit_events')) {
+					html += '<div class="button default right phone_collapse" onClick="$P().do_edit_from_view()" title="' + edit_btn_text + '"><i class="mdi mdi-file-edit-outline">&nbsp;</i><span>' + edit_btn_text + '</span></div>';
+				}
+				if (event.enabled && app.hasPrivilege('run_jobs')) {
+					html += '<div class="button secondary right mobile_collapse" onClick="$P().do_run_current_event()" title="Run Now..." ><i class="mdi mdi-run-fast">&nbsp;</i><span>Run Now...</span></div>';
+				}
 				
 				var is_fav = !!(app.user.favorites && app.user.favorites.events && app.user.favorites.events.includes(event.id));
 				html += '<div id="btn_ve_fav" class="button right mobile_collapse ' + (is_fav ? 'favorite' : '') + '" onClick="$P().do_toggle_favorite()" title="Toggle Favorite"><i class="mdi mdi-'+(is_fav ? 'heart' : 'heart-plus-outline')+'">&nbsp;</i><span>Favorite</span></div>';

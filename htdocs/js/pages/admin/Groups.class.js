@@ -105,7 +105,7 @@ Page.Groups = class Groups extends Page.ServerUtils {
 				nice_match,
 				self.getNiceUser(item.username, app.isAdmin()),
 				'<span title="'+self.getNiceDateTimeText(item.created)+'">'+self.getNiceDate(item.created)+'</span>',
-				actions.join(' | ')
+				actions.join(' | ') || '-'
 			];
 			// if (app.isGroupLimited()) tds.shift();
 			
@@ -619,10 +619,13 @@ Page.Groups = class Groups extends Page.ServerUtils {
 				html += '<div class="box_title_left">Live &mdash; Real-Time View</div>';
 				html += '<div class="box_title_left"><div class="button secondary mobile_collapse" onClick="$P().chooseHistoricalView(true)"><i class="mdi mdi-calendar-cursor">&nbsp;</i><span>Change...</span></div></div>';
 				
-				html += '<div class="box_title_right"><div class="button default mobile_collapse" onClick="$P().goEditGroup()"><i class="mdi mdi-file-edit-outline">&nbsp;</i><span>Edit Group...</span></div></div>';
-				html += '<div class="box_title_right"><div class="button mobile_collapse sm_hide" onClick="$P().createSnapshot()"><i class="mdi mdi-monitor-eye">&nbsp;</i><span>Snapshot</span></div></div>';
-				html += '<div class="box_title_right" id="d_vg_watch_btn">' + this.getWatchButton() + '</div>';
-				
+				if (app.hasPrivilege('edit_groups')) {
+					html += '<div class="box_title_right"><div class="button default mobile_collapse" onClick="$P().goEditGroup()"><i class="mdi mdi-file-edit-outline">&nbsp;</i><span>Edit Group...</span></div></div>';
+				}
+				if (app.hasPrivilege('create_snapshots')) {
+					html += '<div class="box_title_right"><div class="button mobile_collapse sm_hide" onClick="$P().createSnapshot()"><i class="mdi mdi-monitor-eye">&nbsp;</i><span>Snapshot</span></div></div>';
+					html += '<div class="box_title_right" id="d_vg_watch_btn">' + this.getWatchButton() + '</div>';
+				}
 			html += '</div>';
 		html += '</div>';
 		
@@ -630,11 +633,11 @@ Page.Groups = class Groups extends Page.ServerUtils {
 			html += '<div class="box_title">';
 				html += 'Group Summary';
 				
-				html += '<div class="button icon right danger" title="Delete Group..." onClick="$P().show_delete_group_dialog()"><i class="mdi mdi-trash-can-outline"></i></div>';
+				if (app.hasPrivilege('delete_groups')) html += '<div class="button icon right danger" title="Delete Group..." onClick="$P().show_delete_group_dialog()"><i class="mdi mdi-trash-can-outline"></i></div>';
 				html += '<div class="button icon right secondary sm_hide" title="Job History..." onClick="$P().goJobHistory()"><i class="mdi mdi-cloud-search-outline"></i></div>';
 				html += '<div class="button icon right secondary sm_hide" title="Alert History..." onClick="$P().goAlertHistory()"><i class="mdi mdi-restore-alert"></i></div>';
-				html += '<div class="button icon right secondary sm_hide" title="Group History..." onClick="$P().goGroupHistory()"><i class="mdi mdi-script-text-outline"></i></div>';
-				html += '<div class="button icon right" title="Add Server..." onClick="$P().addServerToGroup()"><i class="mdi mdi-server-plus-outline"></i></div>';
+				if (app.isAdmin()) html += '<div class="button icon right secondary sm_hide" title="Group History..." onClick="$P().goGroupHistory()"><i class="mdi mdi-script-text-outline"></i></div>';
+				if (app.hasPrivilege('add_servers')) html += '<div class="button icon right" title="Add Server..." onClick="$P().addServerToGroup()"><i class="mdi mdi-server-plus-outline"></i></div>';
 				
 				html += '<div class="clear"></div>';
 			html += '</div>'; // title
@@ -1337,6 +1340,7 @@ Page.Groups = class Groups extends Page.ServerUtils {
 	
 	updateWatchButton() {
 		// update dynamic watch button based on current state
+		if (!app.hasPrivilege('create_snapshots')) return;
 		this.div.find('#d_vg_watch_btn').html( this.getWatchButton() ).buttonize();
 	}
 	
