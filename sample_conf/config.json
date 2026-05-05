@@ -245,7 +245,7 @@
 	
 	"db_maint": {
 		"jobs": {
-			"max_rows": 1000000
+			"max_rows": 100000
 		},
 		"alerts": {
 			"max_rows": 100000
