@@ -310,7 +310,7 @@ Page.Events = class Events extends Page.PageUtils {
 		var table_opts = {
 			id: 't_events',
 			item_name: 'event',
-			sort_by: 'title',
+			sort_by: 'cat_sort',
 			sort_dir: 1,
 			filter: this.isRowVisible.bind(this),
 			column_ids: ['title', 'cat_sort', 'tag_sort', 'plug_sort', 'target_sort', 'timing_sort', 'status_sort', '' ],
