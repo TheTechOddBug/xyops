@@ -942,10 +942,12 @@ When the SSO custom command is invoked, it is passed a JSON document on STDIN (c
 | `xy` | Number | Indicates the [xyOps Wire Protocol](xywp.md) version.  Will be set to `1`. |
 | `type` | String | Indicates the type of action, which will be set to `sso`. |
 | `config` | Object | The complete [SSO Configuration](#configuration) object is included for the command to use. |
+| `base_app_url` | String | The [base_app_url](config.md#base_app_url) from the current xyOps configuration. |
 | `method` | String | The request method, which should always be `GET`. |
 | `url` | String | The request URI path, which should always be `/`. |
 | `headers` | Object | The request headers object (all header names are lower-cased). |
 | `cookies` | Object | Any cookies found in the `Cookie` header are parsed and placed into this object. |
+| `query` | Object | The URL's query string, parsed into an object. |
 | `id` | String | An internal ID for the request, used for logging. |
 | `ip` | String | The "public" IP address of the request (best effort guess).  See [args.ip](https://github.com/jhuckaby/pixl-server-web#argsip). |
 | `ips` | Array | All the IPs of the request, including forwarded proxy IPs.  See [args.ips](https://github.com/jhuckaby/pixl-server-web#argsips). |
@@ -959,6 +961,7 @@ Here is an example JSON document sent to the SSO command's STDIN (pretty-printed
 	"config": {
 		/* Entire sso.json config contents here */
 	},
+	"base_app_url": "https://local.xyops.io:5523",
 	"method": "GET",
 	"url": "/",
 	"headers": {
@@ -982,6 +985,7 @@ Here is an example JSON document sent to the SSO command's STDIN (pretty-printed
 		"https": 1
 	},
 	"cookies": {},
+	"query": {},
 	"id": "r2",
 	"ip": "127.0.0.1",
 	"ips": [
@@ -1000,6 +1004,7 @@ After your custom command validates and processes the request, it needs to send 
 | `code` | Number | Zero (`0`) indicates success, any other value is an error. |
 | `description` | String | Optional error message, will be displayed to the user if `code` is non-zero. |
 | `headers` | Object | New headers to inject into the request for SSO login. |
+| `redirect` | Boolean | Optionally redirect the user to a URL (should also include `headers.location`). |
 
 Here is an example output (pretty-printed for display purposes):
 
@@ -1039,6 +1044,19 @@ If something goes wrong and the request cannot be validated, your command should
 	"xy": 1,
 	"code": 1,
 	"description": "Failed to validate request: Missing x-amzn-oidc-identity header"
+}
+```
+
+If you need to redirect the user to a custom URL, set `redirect` and include a `location` header.  Example:
+
+```json
+{
+	"xy": 1,
+	"code": 0,
+	"redirect": true,
+	"headers": {
+		"location": "https://custom/url/here"
+	}
 }
 ```
 
