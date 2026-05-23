@@ -2922,6 +2922,11 @@ Page.PageUtils = class PageUtils extends Page.Base {
 						} // required or length
 						else params[ param.id ] = null;
 					} // number
+					
+					if (param.regex && str_value(params[ param.id ]).length && !str_value(params[ param.id ]).match( new RegExp(param.regex) )) {
+						app.badField('#fe_pp_' + plugin_id + '_' + CSS.escape(param.id), "The &ldquo;" + param.title + "&rdquo; field is invalid.");
+						is_valid = false;
+					}
 				break;
 			} // switch param.type
 		}); // foreach param
@@ -4659,6 +4664,7 @@ Page.PageUtils = class PageUtils extends Page.Base {
 		var title = (idx > -1) ? "Editing Parameter" : "New Parameter";
 		var btn = (idx > -1) ? ['check-circle', "Accept"] : ['plus-circle', "Add Param"];
 		var old_param = param;
+		var show_lock = !!(this.pluginType === 'event');
 		
 		// prepare control type menu
 		var ctypes = (this.controlTypes || ['checkbox', 'code', 'json', 'hidden', 'select', 'bucket', 'system', 'text', 'textarea', 'group']).map (function(key) { 
@@ -4745,6 +4751,18 @@ Page.PageUtils = class PageUtils extends Page.Base {
 				value: (param.value || '').toString()
 			}),
 			caption: "Enter the default value for the text box."
+		});
+		html += this.getFormRow({
+			id: 'd_epa_value_regex',
+			label: 'Validate Pattern:',
+			content: this.getFormText({
+				id: 'fe_epa_value_regex',
+				spellcheck: 'false',
+				autocomplete: 'off',
+				class: 'monospace',
+				value: str_value(param.regex)
+			}),
+			caption: 'Optionally enter a regular expression to validate the text value.'
 		});
 		html += this.getFormRow({
 			id: 'd_epa_value_code',
@@ -4944,16 +4962,19 @@ Page.PageUtils = class PageUtils extends Page.Base {
 						if (!param.value.length) param.value = null;
 						else param.value = parseFloat(param.value) || 0;
 					}
+					param.regex = $('#fe_epa_value_regex').val().trim();
 				break;
 				
 				case 'textarea':
 					param.value = $('#fe_epa_value_textarea').val();
 					param.required = !!$('#fe_epa_required').is(':checked');
+					param.regex = $('#fe_epa_value_regex').val().trim();
 				break;
 				
 				case 'code':
 					param.value = $('#fe_epa_value_code').val();
 					param.required = !!$('#fe_epa_required').is(':checked');
+					param.regex = $('#fe_epa_value_regex').val().trim();
 				break;
 				
 				case 'json':
@@ -5009,10 +5030,19 @@ Page.PageUtils = class PageUtils extends Page.Base {
 					delete param.locked;
 					delete param.caption;
 				break;
-			} // switch action.type
+			} // switch param.type
+			
+			if (param.regex) try { new RegExp(param.regex); }
+			catch (err) { return app.badField('#fe_epa_value_regex', "Invalid regular expression: " + err); }
+			
+			// validate default value with regex
+			if (param.regex && str_value(param.value).length && !str_value(param.value).match( new RegExp(param.regex) )) {
+				return app.badField('#fe_epa_value_' + param.type, "The default value does not match the validation pattern.");
+			}
 			
 			if (param.type != 'text') delete param.variant;
 			if (param.type != 'toolset') delete param.data;
+			if (!show_lock) delete param.locked;
 			
 			// see if we need to add or replace
 			if (idx == -1) {
@@ -5028,13 +5058,14 @@ Page.PageUtils = class PageUtils extends Page.Base {
 		} ); // Dialog.confirm
 		
 		var change_param_type = function(new_type) {
-			$('#d_epa_value_text, #d_epa_value_textarea, #d_epa_value_code, #d_epa_value_json, #d_epa_value_checkbox, #d_epa_value_select, #d_epa_value_hidden, #d_epa_value_toolset, #d_epa_bucket_id, #d_epa_bucket_path, #d_epa_list_id').hide();
+			$('#d_epa_value_text, #d_epa_value_textarea, #d_epa_value_regex, #d_epa_value_code, #d_epa_value_json, #d_epa_value_checkbox, #d_epa_value_select, #d_epa_value_hidden, #d_epa_value_toolset, #d_epa_bucket_id, #d_epa_bucket_path, #d_epa_list_id').hide();
 			$('#d_epa_value_' + new_type).show();
+			$('#d_epa_value_regex').toggle( !!new_type.match(/^(text|textarea|code)$/) );
 			$('#d_epa_id').toggle( !new_type.match(/^(group)$/) );
 			$('#d_epa_caption').toggle( !new_type.match(/^(group)$/) );
 			$('#d_epa_required').toggle( !!new_type.match(/^(text|textarea|code)$/) );
 			$('#d_epa_text_variant').toggle( !!new_type.match(/^(text)$/) );
-			$('#d_epa_locked').toggle( !new_type.match(/^(toolset|group)$/) );
+			$('#d_epa_locked').toggle( !new_type.match(/^(toolset|group)$/) && show_lock );
 			$('#d_epa_bucket_id, #d_epa_bucket_path').toggle( !!new_type.match(/^(bucket)$/) );
 			$('#d_epa_list_id').toggle( !!new_type.match(/^(system)$/) );
 			$('#d_epa_multiple').toggle( !!new_type.match(/^(select|bucket|system)$/) );
@@ -5281,6 +5312,10 @@ Page.PageUtils = class PageUtils extends Page.Base {
 				else {
 					if (typeof(field.value) != 'string') { err_msg = `Tool '${tool.id}' field '${field.id}' has an invalid text value (must be a string).`; is_valid = false; return; }
 				}
+				
+				// regex
+				if (field.regex) try { new RegExp(field.regex); }
+				catch (err) { err_msg = `Tool '${tool.id}' field '${field.id}' has an invalid regular expression: ${err}`; is_valid = false; return; }
 			}); // foreach field
 		} ); // foreach tool
 		
@@ -5524,6 +5559,11 @@ Page.PageUtils = class PageUtils extends Page.Base {
 					} // required or has length
 					else params[ param.id ] = null;
 				} // number
+				
+				if (param.regex && str_value(params[ param.id ]).length && !str_value(params[ param.id ]).match( new RegExp(param.regex) )) {
+					app.badField('#fe_uf_' + CSS.escape(param.id), "The &ldquo;" + param.title + "&rdquo; field is invalid.");
+					is_valid = false;
+				}
 			} // textish
 		});
 		
