@@ -1190,9 +1190,26 @@ Note that when all the parameter values are collected from the user, they are "f
 
 ### Group
 
-Use the `group` control type to automatically group all controls below into a fieldset (a visual box).  The group will encompass all controls until the end of the parameter list, or until another group is defined.
+Use the `group` control type to automatically group all controls below into a fieldset (a visual box), with a custom label and an optional Markdown-formatted caption.  The group will encompass all controls below it, until one of the following is encountered:
+
+- Another named group
+- A toolset parameter
+- The end of the parameter list
 
 Groups are visual separators only, and do not change any functionality, parameter names, etc.
+
+Example group:
+
+```json
+{
+	"id": "group_resize",
+	"title": "Resize",
+	"type": "group",
+	"caption": "Optionally resize each input image before any other operations are applied."
+}
+```
+
+Groups also need a locally unique `id` (alphanumeric).
 
 ## Macro Expansion
 

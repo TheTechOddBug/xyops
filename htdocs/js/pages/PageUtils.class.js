@@ -2609,9 +2609,13 @@ Page.PageUtils = class PageUtils extends Page.Base {
 				if (in_group) html += `</fieldset>`;
 				html += `<fieldset class="info_fieldset">`;
 				html += `<legend>${strip_html(param.title)}</legend>`;
+				if (param.caption) html += `<div class="tool_desc">${inline_marked(strip_html(param.caption))}</div>`;
 				in_group = true;
 				return;
 			}
+			
+			// toolset breaks out of a previous group
+			if ((param.type == 'toolset') && in_group) { html += `</fieldset>`; in_group = false; }
 			
 			if (param.type != 'checkbox') {
 				if (elem_dis) html += '<div class="info_label" style="color:var(--red)"><i class="mdi mdi-lock">&nbsp;</i>' + param.title + ' (Admin Locked)</div>';
@@ -2749,16 +2753,20 @@ Page.PageUtils = class PageUtils extends Page.Base {
 						onChange: `$P().changePluginParamTool('${plugin_id}','${param.id}',${explore})` 
 					});
 					
+					if (param.caption) html += '<div class="info_caption">' + inline_marked( strip_html(param.caption) ) + '</div>';
+					
 					html += `<fieldset id="fs_toolset_${plugin_id}_${param.id}" class="info_fieldset">`;
 					html += `<legend>${strip_html(tool.title)}</legend>`;
-					html += `<div class="tool_desc">${strip_html(tool.description)}</div>`;
+					if (tool.description) html += `<div class="tool_desc">${inline_marked(strip_html(tool.description))}</div>`;
 					if (tool.fields && tool.fields.length) html += self.getParamEditor(tool.fields, params, explore);
 					html += `</fieldset>`;
 				break;
 			} // switch type
 			
-			if (param.caption) html += '<div class="info_caption">' + inline_marked( strip_html(param.caption) ) + '</div>';
-			else if (elem_dis) html += '<div class="info_caption">This parameter is locked, and only editable by administrators.</div>';
+			if (param.type != 'toolset') {
+				if (param.caption) html += '<div class="info_caption">' + inline_marked( strip_html(param.caption) ) + '</div>';
+				else if (elem_dis) html += '<div class="info_caption">This parameter is locked, and only editable by administrators.</div>';
+			}
 			
 			html += '</div>';
 		} ); // foreach param
@@ -2818,7 +2826,7 @@ Page.PageUtils = class PageUtils extends Page.Base {
 		var html = '';
 		
 		html += `<legend>${strip_html(tool.title)}</legend>`;
-		html += `<div class="tool_desc">${strip_html(tool.description)}</div>`;
+		if (tool.description) html += `<div class="tool_desc">${inline_marked(strip_html(tool.description))}</div>`;
 		if (tool.fields && tool.fields.length) html += this.getParamEditor(tool.fields, {}, explore);
 		
 		$fieldset.html(html).buttonize();
@@ -5028,7 +5036,6 @@ Page.PageUtils = class PageUtils extends Page.Base {
 					delete param.required;
 					delete param.value;
 					delete param.locked;
-					delete param.caption;
 				break;
 			} // switch param.type
 			
@@ -5062,7 +5069,6 @@ Page.PageUtils = class PageUtils extends Page.Base {
 			$('#d_epa_value_' + new_type).show();
 			$('#d_epa_value_regex').toggle( !!new_type.match(/^(text|textarea|code)$/) );
 			$('#d_epa_id').toggle( !new_type.match(/^(group)$/) );
-			$('#d_epa_caption').toggle( !new_type.match(/^(group)$/) );
 			$('#d_epa_required').toggle( !!new_type.match(/^(text|textarea|code)$/) );
 			$('#d_epa_text_variant').toggle( !!new_type.match(/^(text)$/) );
 			$('#d_epa_locked').toggle( !new_type.match(/^(toolset|group)$/) && show_lock );
@@ -5367,6 +5373,7 @@ Page.PageUtils = class PageUtils extends Page.Base {
 				if (in_group) html += `</fieldset>`;
 				html += `<fieldset class="info_fieldset">`;
 				html += `<legend>${strip_html(param.title)}</legend>`;
+				if (param.caption) html += `<div class="tool_desc">${inline_marked(strip_html(param.caption))}</div>`;
 				in_group = true;
 				return;
 			}
