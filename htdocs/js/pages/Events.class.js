@@ -1895,7 +1895,7 @@ Page.Events = class Events extends Page.PageUtils {
 		html += '<div class="box_buttons">';
 			html += '<div class="button" onClick="$P().cancel_event_new()"><i class="mdi mdi-close-circle-outline">&nbsp;</i>Cancel</div>';
 			html += '<div class="button secondary" onClick="$P().do_export_current()"><i class="mdi mdi-cloud-download-outline">&nbsp;</i><span>Export...</span></div>';
-			html += '<div class="button primary" id="btn_save" onClick="$P().do_new_event()"><i class="mdi mdi-floppy">&nbsp;</i>Create Event</div>';
+			html += '<div class="button save" id="btn_save" onClick="$P().do_new_event()"><i class="mdi mdi-floppy">&nbsp;</i>Create Event</div>';
 		html += '</div>'; // box_buttons
 		
 		html += '</div>'; // box
@@ -1909,10 +1909,12 @@ Page.Events = class Events extends Page.PageUtils {
 		// this.updateAddRemoveMe('#fe_ee_email');
 		$('#fe_ee_title').focus();
 		this.setupBoxButtonFloater();
+		this.setupEditTriggers();
 	}
 	
 	cancel_event_new() {
 		// cancel editing event and return to list
+		$('.button.save').removeClass('primary');
 		if (this.event.id) Nav.go( '#Events?sub=view&id=' + this.event.id );
 		else Nav.go( '#Events?sub=list' );
 	}
@@ -1938,6 +1940,7 @@ Page.Events = class Events extends Page.PageUtils {
 		var idx = find_object_idx(app.events, { id: resp.event.id });
 		if (idx == -1) app.events.push(resp.event);
 		
+		$('.button.save').removeClass('primary');
 		Nav.go( 'Events?sub=view&id=' + resp.event.id );
 		app.showMessage('success', "The new event was created successfully.");
 	}
@@ -2018,6 +2021,7 @@ Page.Events = class Events extends Page.PageUtils {
 	
 	cancel_event_edit() {
 		// cancel editing event and return to list
+		$('.button.save').removeClass('primary');
 		if (this.event.id) Nav.go( '#Events?sub=view&id=' + this.event.id );
 		else Nav.go( '#Events?sub=list' );
 	}
@@ -2037,6 +2041,7 @@ Page.Events = class Events extends Page.PageUtils {
 		delete clone.username;
 		
 		this.clone = clone;
+		$('.button.save').removeClass('primary');
 		Nav.go('Events?sub=new');
 	}
 	
@@ -2572,6 +2577,7 @@ Page.Events = class Events extends Page.PageUtils {
 				Dialog.hideProgress();
 				if (!self.active) return; // sanity
 				
+				$('.button.save').removeClass('primary');
 				app.showMessage('success', "The " + thing + " &ldquo;" + event.title + "&rdquo; was deleted successfully.  The job history is being deleted in the background.");
 				Nav.go('Events?sub=list', 'force');
 				
@@ -4278,8 +4284,26 @@ Page.Events = class Events extends Page.PageUtils {
 		}
 	}
 	
-	onDeactivate() {
+	showNavConfirm(anchor) {
+		// show confirmation dialog before leaving page
+		var text = `You have unsaved changes on the current page.  Are you sure you want to leave and abandon them?`;
+		
+		Dialog.confirmDanger( 'Unsaved Changes', text, ['check-circle', 'Leave'], function(result) {
+			if (!result) return;
+			$('.button.save').removeClass('primary');
+			Nav.go(anchor);
+		} ); // confirm
+	}
+	
+	onDeactivate(new_id, anchor) {
 		// called when page is deactivated
+		
+		// check for changes on specific subs, with some sanity checks first
+		if (this.args && String(this.args.sub).match(/^(new|edit)$/) && app.comm.socket && app.comm.socket.connected && $('.button.save').hasClass('primary')) {
+			this.showNavConfirm( anchor );
+			return false;
+		}
+		
 		delete this.jobs;
 		delete this.event;
 		delete this.upcomingJobs;

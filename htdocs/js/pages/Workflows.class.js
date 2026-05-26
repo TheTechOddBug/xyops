@@ -145,7 +145,7 @@ Page.Workflows = class Workflows extends Page.Events {
 		
 		// render workflow editor
 		html += this.get_wf_editor_html(`
-			<div class="button primary tablet_collapse" id="btn_save" title="${config.ui.buttons.wf_new_save}" onClick="$P().do_new_workflow()"><i class="mdi mdi-floppy">&nbsp;</i><span>${config.ui.buttons.wf_new_save}<span></div>
+			<div class="button save tablet_collapse" id="btn_save" title="${config.ui.buttons.wf_new_save}" onClick="$P().do_new_workflow()"><i class="mdi mdi-floppy">&nbsp;</i><span>${config.ui.buttons.wf_new_save}<span></div>
 			<div class="button secondary mobile_collapse tablet_hide" title="${config.ui.buttons.export}" onClick="$P().do_export_current()"><i class="mdi mdi-cloud-download-outline">&nbsp;</i><span>${config.ui.buttons.export}</span></div>
 			<div class="button mobile_collapse" title="${config.ui.buttons.cancel}" onClick="$P().cancel_workflow_edit()"><i class="mdi mdi-close-circle-outline">&nbsp;</i><span>${config.ui.buttons.cancel}</span></div>
 		`);
@@ -159,12 +159,14 @@ Page.Workflows = class Workflows extends Page.Events {
 		// this.updateAddRemoveMe('#fe_wf_email');
 		$('#fe_wf_title').focus();
 		this.setupBoxButtonFloater();
+		this.setupEditTriggers();
 		
 		this.setupWorkflowEditor();
 	}
 	
 	cancel_workflow_edit() {
 		// cancel editing wf and return to list
+		$('.button.save').removeClass('primary');
 		if (this.event.id) Nav.go( '#Events?sub=view&id=' + this.event.id );
 		else Nav.go( '#Events?plugin=_workflow' );
 	}
@@ -191,6 +193,7 @@ Page.Workflows = class Workflows extends Page.Events {
 		if (idx == -1) app.events.push(resp.event);
 		
 		// Nav.go( 'Events?sub=view&id=' + resp.event.id );
+		$('.button.save').removeClass('primary');
 		Nav.go( 'Workflows?sub=edit&id=' + resp.event.id + '&scroll=bottom' );
 		
 		app.showMessage('success', config.ui.messages.wf_new_save);
@@ -285,6 +288,7 @@ Page.Workflows = class Workflows extends Page.Events {
 		delete clone.username;
 		
 		this.clone = clone;
+		$('.button.save').removeClass('primary');
 		Nav.go('Workflows?sub=new');
 	}
 	
@@ -2964,8 +2968,15 @@ Page.Workflows = class Workflows extends Page.Events {
 		}
 	}
 	
-	onDeactivate() {
+	onDeactivate(new_id, anchor) {
 		// called when page is deactivated
+		
+		// check for changes on specific subs, with some sanity checks first
+		if (this.args && String(this.args.sub).match(/^(new|edit)$/) && app.comm.socket && app.comm.socket.connected && $('.button.save').hasClass('primary')) {
+			this.showNavConfirm( anchor );
+			return false;
+		}
+		
 		if (this.confetti) {
 			this.confetti.reset();
 			delete this.confetti;
