@@ -1787,7 +1787,10 @@ Page.Base = class Base extends Page {
 		} );
 		
 		events.forEach( function(event) {
-			if (event.type == 'workflow') event.icon = 'clipboard-flow-outline';
+			if (!event.icon) {
+				if (event.type == 'workflow') event.icon = 'clipboard-flow-outline';
+				else event.icon = 'calendar-clock';
+			}
 			
 			if (event.category != last_cat_id) {
 				last_cat_id = event.category;
@@ -1829,6 +1832,7 @@ Page.Base = class Base extends Page {
 		
 		servers.forEach( function(server) {
 			server.title = server.title || app.formatHostname(server.hostname);
+			server.icon = server.icon || 'router-network';
 			
 			if (server.groups[0] != last_grp_id) {
 				last_grp_id = server.groups[0];

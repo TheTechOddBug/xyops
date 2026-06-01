@@ -5254,7 +5254,7 @@ Page.PageUtils = class PageUtils extends Page.Base {
 			
 			default: 
 				if (list_def && app[list_id]) {
-					items = app[list_id].map( function(item) { return { id: item.id, title: item.title, icon: list_def.icon }; } );
+					items = app[list_id].map( function(item) { return { id: item.id, title: item.title, icon: item.icon || list_def.icon }; } );
 				}
 				else items = app[list_id] || []; 
 			break;
