@@ -1487,6 +1487,17 @@ The following Event Plugins are built into xyOps and come preinstalled.
 
 xyOps ships with a built-in "Shell Plugin", which you can use to execute arbitrary shell scripts.  Simply select the Shell Plugin when creating an event or workflow, and enter your script.  This is an easy way to get up and running quickly, because you don't have to worry about reading or writing JSON.
 
+Here are the parameters it accepts:
+
+| Param Name | Param ID | Type | Description |
+|------------|----------|------|-------------|
+| **Script Source** | `script` | Code | Enter the shell script source to run.  This parameter is **Administrator Locked** by default, so standard users and non-admin API Keys cannot change it unless an administrator unlocks the parameter or grants admin privilege. |
+| **Add Date/Time Stamps to Log** | `annotate` | Checkbox | Prefix non-JSON stdout lines with date/time stamps in the job output, so each line is easier to trace during long-running jobs. |
+| **Data Passthrough** | `pass` | Checkbox | Legacy option that copies the job input data into the job output data, so downstream workflow nodes or run-event actions receive the same data.  For new workflows, [Workflow Data](workflows.md#sharing-data-between-all-nodes) is usually the better option. |
+
+> [!IMPORTANT]
+> The Shell Plugin can execute arbitrary code on your servers.  Keep the `script` parameter administrator locked unless you intentionally want non-admin users or API Keys to provide shell commands.
+
 The Shell Plugin determines success or failure based on the [exit code](https://en.wikipedia.org/wiki/Exit_status) of your script.  This defaults to `0` representing success.  Meaning, if you want to trigger an error, exit with a non-zero status code, and make sure you print your error message to STDOUT or STDERR (both will be appended to your job's output capture).  Example:
 
 ```sh
@@ -1523,22 +1534,6 @@ This would allow xyOps to show a graphical progress bar in the UI, and estimate 
 
 > [!TIP]
 > The Shell Plugin actually supports any interpreted scripting language, including Node.js, PHP, Perl, Python, and more.  Basically, any language that supports a [Shebang](https://en.wikipedia.org/wiki/Shebang_%28Unix%29) line will work in the Shell Plugin.  Just change the `#!/bin/sh` to point to your interpreter of choice.
-
-#### Shell Data Passthrough
-
-The Shell Plugin has a legacy feature called "Data Passthrough", which is a checkbox you will see when configuring the plugin on an event.  When checked, this will cause the Shell Plugin to read all input data for the job, and pass it through to the output, just as if you did it manually in code like this:
-
-```js
-#!/usr/bin/node
-
-const chunks = [];
-for await (const chunk of process.stdin) chunks.push(chunk);
-let job = JSON.parse( chunks.join('') );
-
-console.log( JSON.stringify({ xy: 1, data: job.input.data }) );
-```
-
-This was requested by a user before the [Workflow Data](#Docs/workflows/sharing-data-between-all-nodes) feature was introduced.  It is largely obsolete now, and kept around for legacy purposes only.
 
 ### HTTP Request Plugin
 
