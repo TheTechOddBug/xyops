@@ -2679,7 +2679,8 @@ Page.PageUtils = class PageUtils extends Page.Base {
 						rows: 5, 
 						class: 'monospace', 
 						disabled: elem_dis,
-						spellcheck: 'false'
+						spellcheck: 'false',
+						onkeydown: "captureTabs(this, event)"
 					}) + explore_end;
 				break;
 				
@@ -5478,7 +5479,8 @@ Page.PageUtils = class PageUtils extends Page.Base {
 						rows: 5, 
 						class: 'monospace', 
 						disabled: elem_dis,
-						spellcheck: 'false'
+						spellcheck: 'false',
+						onkeydown: "captureTabs(this, event)"
 					}) + explore_end;
 				break;
 				
