@@ -798,11 +798,6 @@ Maximum concurrent I/O operations (default: `32`).
 
 Enables transactional writes (default: `true`).  Please leave this enabled!
 
-### Storage.network_transactions
-<!-- Title: Network Transactions -->
-
-Enables transactions across networked backends (experimental: use with caution).
-
 ### Storage.trans_auto_recover
 <!-- Title: Transaction Auto-Recover -->
 
