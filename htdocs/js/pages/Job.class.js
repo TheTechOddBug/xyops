@@ -3252,7 +3252,7 @@ Page.Job = class Job extends Page.PageUtils {
 	
 	do_view_job_data() {
 		// show job json in dialog
-		this.viewCodeAuto("Job Data JSON", this.getJobJSON());
+		this.viewCodeAuto("View Job Data JSON", this.getJobJSON());
 	}
 	
 	do_copy_job_data() {
