@@ -1274,8 +1274,7 @@
 		{
 			"id": "red",
 			"title": "Red",
-			"class": "clr_red",
-			"group": "Spectrum Colors"
+			"class": "clr_red"
 		},
 		{
 			"id": "fire",
@@ -1436,52 +1435,6 @@
 			"id": "rose",
 			"title": "Rose",
 			"class": "clr_rose"
-		},
-		{
-			"id": "slate",
-			"title": "Slate",
-			"class": "clr_slate",
-			"group": "Muted Colors"
-		},
-		{
-			"id": "gray",
-			"title": "Gray",
-			"class": "clr_gray"
-		},
-		{
-			"id": "zinc",
-			"title": "Zinc",
-			"class": "clr_zinc"
-		},
-		{
-			"id": "neutral",
-			"title": "Neutral",
-			"class": "clr_neutral"
-		},
-		{
-			"id": "stone",
-			"title": "Stone",
-			"class": "clr_stone"
-		},
-		{
-			"id": "mauve",
-			"title": "Mauve",
-			"class": "clr_mauve"
-		},
-		{
-			"id": "olive",
-			"title": "Olive",
-			"class": "clr_olive"
-		},
-		{
-			"id": "mist",
-			"title": "Mist",
-			"class": "clr_mist"
-		},
-		{
-			"id": "taupe",
-			"title": "Taupe",
-			"class": "clr_taupe"
 		}
 	],
 	

@@ -471,14 +471,14 @@ Page.Categories = class Categories extends Page.PageUtils {
 		
 		// color
 		html += this.getFormRow({
-			label: 'Tint Color:',
+			label: 'Highlight Color:',
 			content: this.getFormMenuSingle({
 				id: 'fe_ec_color',
-				title: "Select Tint Color",
+				title: "Select Highlight Color",
 				options: config.ui.category_colors,
 				value: category.color
 			}),
-			caption: 'Optionally select a tint color for the category, which will show on applicable event and job lists.'
+			caption: 'Optionally select a highlight color for the category, which will show on applicable event and job listings.'
 		});
 		
 		// actions

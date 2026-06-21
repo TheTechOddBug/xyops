@@ -96,7 +96,7 @@ Page.Events = class Events extends Page.PageUtils {
 						content: this.getFormMenuSingle({
 							id: 'fe_el_category',
 							title: 'Select Category',
-							options: [['', 'Any Category']].concat( app.categories ),
+							options: [['', 'Any Category']].concat( this.getCategoriesForMenu() ),
 							value: args.category || '',
 							default_icon: 'folder-open-outline',
 							'data-shrinkwrap': 1
@@ -2665,7 +2665,7 @@ Page.Events = class Events extends Page.PageUtils {
 				id: 'fe_ee_cat',
 				title: 'Select category for event',
 				placeholder: 'Select category for event...',
-				options: app.categories,
+				options: this.getCategoriesForMenu(),
 				value: event.category || '',
 				default_icon: 'folder-open-outline',
 				// 'data-shrinkwrap': 1
