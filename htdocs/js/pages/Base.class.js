@@ -1781,9 +1781,10 @@ Page.Base = class Base extends Page {
 	}
 	
 	getCategoriesForMenu() {
-		// get decorated categories for drop-down menu
+		// get colored categories for drop-down menu
 		return app.categories.map( function(cat) {
-			return { ...cat, class: cat.color ? `clr_${cat.color}` : `` };
+			var clr = cat.color || 'plain';
+			return { ...cat, class: `clr_${cat.color}` };
 		} );
 	}
 	
