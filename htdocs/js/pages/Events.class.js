@@ -646,14 +646,14 @@ Page.Events = class Events extends Page.PageUtils {
 		
 		if (is_workflow) {
 			app.setHeaderNav([
-				{ icon: 'clipboard-flow-outline', loc: '#Events?plugin=_workflow', title: 'Workflows' },
+				{ icon: 'clipboard-flow-outline', loc: $('#tab_Workflows').attr('href'), title: 'Workflows' },
 				{ icon: icon, title: event.title }
 			]);
 			app.highlightTab( 'Workflows' );
 		}
 		else {
 			app.setHeaderNav([
-				{ icon: 'calendar-clock', loc: '#Events?sub=list', title: 'Events' },
+				{ icon: 'calendar-clock', loc: $('#tab_Events').attr('href'), title: 'Events' },
 				{ icon: icon, title: event.title }
 			]);
 			app.highlightTab( 'Events' );
