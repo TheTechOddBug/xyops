@@ -1274,7 +1274,8 @@
 		{
 			"id": "red",
 			"title": "Red",
-			"class": "clr_red"
+			"class": "clr_red",
+			"group": "Spectrum Colors"
 		},
 		{
 			"id": "fire",
@@ -1439,7 +1440,8 @@
 		{
 			"id": "slate",
 			"title": "Slate",
-			"class": "clr_slate"
+			"class": "clr_slate",
+			"group": "Muted Colors"
 		},
 		{
 			"id": "gray",
