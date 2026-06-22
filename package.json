@@ -83,5 +83,10 @@
 	},
 	"devDependencies": {
 		"pixl-unit": "^2.0.0"
+	},
+	"allowScripts": {
+		"better-sqlite3@12.6.2": true,
+		"mime@2.5.2": true,
+		"useragent-ng@2.4.5": true
 	}
 }
