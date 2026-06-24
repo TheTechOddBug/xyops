@@ -1461,13 +1461,13 @@ Page.PageUtils = class PageUtils extends Page.Base {
 		var btn = (idx > -1) ? ['check-circle', "Accept"] : ['plus-circle', "Add Limit"];
 		
 		if (!limit) {
-			if (!find_object(this.limits, { type: 'time' })) limit = { type: 'time' };
-			else if (!find_object(this.limits, { type: 'job' })) limit = { type: 'job' };
+			if (!find_object(this.limits, { type: 'job' })) limit = { type: 'job' };
+			else if (!find_object(this.limits, { type: 'queue' })) limit = { type: 'queue' };
+			else if (!find_object(this.limits, { type: 'retry' })) limit = { type: 'retry' };
+			else if (!find_object(this.limits, { type: 'time' })) limit = { type: 'time' };
 			else if (!find_object(this.limits, { type: 'log' })) limit = { type: 'log' };
 			else if (!find_object(this.limits, { type: 'mem' })) limit = { type: 'mem' };
 			else if (!find_object(this.limits, { type: 'cpu' })) limit = { type: 'cpu' };
-			else if (!find_object(this.limits, { type: 'retry' })) limit = { type: 'retry' };
-			else if (!find_object(this.limits, { type: 'queue' })) limit = { type: 'queue' };
 			else if (!find_object(this.limits, { type: 'file' })) limit = { type: 'file' };
 			else limit = { type: 'day' };
 			limit.enabled = true;
