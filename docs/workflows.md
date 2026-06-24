@@ -179,6 +179,17 @@ Conditions on wires from Event/Job nodes determine which outputs fire when a sub
 The editor defaults new wires from Event/Job outputs to success, and you can change the condition inline on the wire (just click it). Note that Action and Limit nodes do not forward flow: they are attached to the launched sub-job; actions require a condition and limits attach via the bottom pole.
 
 
+## Custom Resume Flow
+
+When a workflow sub-job is suspended by a completion action, the resume dialog lets the user choose how workflow flow should continue after the job is resumed.  The default option resumes normally, which means xyOps evaluates the completed sub-job result and follows any matching output wires from the current Event or Job node.
+
+The user can also choose a specific workflow Event or Job node to jump to.  In this mode, xyOps launches that selected node directly after the suspended sub-job resumes, instead of following the normal matching output wires from the suspended node.
+
+This selector is only shown when the suspended workflow sub-job is already at the end of its job lifecycle.  In other words, it appears for a Suspend Job action wired to a completion condition such as `On Complete`, `On Success`, `On Any Error`, `On Warning`, `On Critical`, `On Abort`, or a tag condition.  It is not shown when the Suspend Job action fires at the start of the job, such as `On Start`.
+
+The same behavior is available through the [resume_job](api.md#resume_job) API by passing the optional `redirect` property with the target workflow node ID.
+
+
 ## Continue After Controllers
 
 [Repeat](#repeat-controller), [Multiplex](#multiplex-controller) and [Split](#split-controller) are special because they launch the same Event or Job node multiple times.  For example, Repeat may run the same job 10 times, Multiplex may run it once per server in the target group, and Split may run it once per item or file.
