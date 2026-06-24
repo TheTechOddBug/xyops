@@ -924,6 +924,7 @@
 	"intros": {
 		"wfd_exp_builder": "This allows you to explore output data from recently completed jobs, and pick out a specific JSON key path to use for your controller expression.",
 		"wfd_data_importer": "Select a previously completed job to import the data and/or files from it.  This is so you can use it as simulated input for your test run.",
+		"wfd_test_selection": "Use this form to test the workflow in its current state.  This runs an ad-hoc test job with your edits, and any custom settings below.  The test will launch in a new browser tab in order to preserve your current context.",
 		"server_data_explorer": "This allows you to explore monitoring data from your servers, and pick out a specific JSON key path to use for your expression.",
 		"job_create_ticket": "Use this form to create a new ticket, which will reference the current job.",
 		"job_add_to_ticket": "Attach the current job to an existing ticket.",
