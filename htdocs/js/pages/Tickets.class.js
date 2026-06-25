@@ -1679,20 +1679,6 @@ Page.Tickets = class Tickets extends Page.PageUtils {
 		this.renderTicketFiles();
 	}
 	
-	doAbortJob(id) {
-		// abort job, clicked from active or queued tables
-		Dialog.confirmDanger( 'Abort Job', "Are you sure you want to abort the job &ldquo;<b>" + id + "</b>&rdquo;?", ['alert-decagram', 'Abort'], function(result) {
-			if (!result) return;
-			app.clearError();
-			Dialog.showProgress( 1.0, "Aborting Job..." );
-			
-			app.api.post( 'app/abort_job', { id: id }, function(resp) {
-				Dialog.hideProgress();
-				app.showMessage('success', config.ui.messages.job_aborted);
-			} ); // api.post
-		} ); // confirm
-	}
-	
 	doRemoveJob(idx) {
 		// remove job from ticket
 		var self = this;

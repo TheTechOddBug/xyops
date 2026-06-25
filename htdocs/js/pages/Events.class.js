@@ -1231,6 +1231,7 @@ Page.Events = class Events extends Page.PageUtils {
 	
 	doAbortJob(id) {
 		// abort job, clicked from active or queued tables
+		// overriding this function here so queued jobs can be aborted
 		Dialog.confirmDanger( 'Abort Job', "Are you sure you want to abort the job &ldquo;<b>" + id + "</b>&rdquo;?", ['alert-decagram', 'Abort'], function(result) {
 			if (!result) return;
 			app.clearError();

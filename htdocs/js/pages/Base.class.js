@@ -1527,29 +1527,6 @@ Page.Base = class Base extends Page {
 		else return '<i class="mdi mdi-' + icon + '">&nbsp;</i>' + nice_state;
 	}
 	
-	doSkipJobDelay(job_id) {
-		// show dialog to skip job delay
-		var self = this;
-		var job = app.activeJobs[job_id];
-		if (!job) return app.doError("Could not find the job, or it is no longer active: #" + job_id);
-		
-		var args = this.getJobDisplayArgs(job);
-		var title = "Skip Job Delay";
-		var btn = ['clock-fast', 'Skip Delay'];
-		var html = `Are you sure you want to skip the delay for job #${args.title}?`;
-		
-		Dialog.confirmDanger( title, html, btn, function(result) {
-			if (!result) return;
-			app.clearError();
-			Dialog.showProgress( 1.0, "Skipping Job Delay..." );
-			
-			app.api.post( 'app/job_skip_delay', { id: job_id }, function(resp) {
-				Dialog.hideProgress();
-				app.showMessage('success', "The job delay was successfully skipped.");
-			} ); // api.post
-		} ); // confirm
-	}
-	
 	getNiceJobAvgCPU(job) {
 		// avg cpu for display
 		var cpu_avg = 0;
@@ -2069,6 +2046,54 @@ Page.Base = class Base extends Page {
 		);
 		
 		return this.buildOptGroup( servers, title || "Servers:", default_icon || 'router-network' );
+	}
+	
+	// Job Utilities
+	
+	doSkipJobDelay(job_id) {
+		// show dialog to skip job delay
+		var self = this;
+		var job = app.activeJobs[job_id];
+		if (!job) return app.doError("Could not find the job, or it is no longer active: #" + job_id);
+		
+		var args = this.getJobDisplayArgs(job);
+		var title = "Skip Job Delay";
+		var btn = ['clock-fast', 'Skip Delay'];
+		var html = `Are you sure you want to skip the delay for job #${args.title}?`;
+		
+		Dialog.confirmDanger( title, html, btn, function(result) {
+			if (!result) return;
+			app.clearError();
+			Dialog.showProgress( 1.0, "Skipping Job Delay..." );
+			
+			app.api.post( 'app/job_skip_delay', { id: job_id }, function(resp) {
+				Dialog.hideProgress();
+				app.showMessage('success', "The job delay was successfully skipped.");
+			} ); // api.post
+		} ); // confirm
+	}
+	
+	doAbortJob(job_id) {
+		// abort any active job in any state
+		var self = this;
+		var job = app.activeJobs[job_id];
+		if (!job) return app.doError("Could not find the job, or it is no longer active: #" + job_id);
+		
+		var args = this.getJobDisplayArgs(job);
+		var title = "Abort Job";
+		var btn = ['alert-decagram', 'Abort'];
+		var html = `Are you sure you want to abort the job #${args.title}?`;
+		
+		Dialog.confirmDanger( title, html, btn, function(result) {
+			if (!result) return;
+			app.clearError();
+			Dialog.showProgress( 1.0, "Aborting Job..." );
+			
+			app.api.post( 'app/abort_job', { id: job_id }, function(resp) {
+				Dialog.hideProgress();
+				app.showMessage('success', config.ui.messages.job_aborted);
+			} ); // api.post
+		} ); // confirm
 	}
 	
 	// Upcoming Job Prediction
