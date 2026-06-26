@@ -1531,6 +1531,10 @@ div.header_title.error {
 	top: 4px;
 }
 
+.data_grid div.td_drag_handle[draggable]:hover {
+	color: var(--theme-color);
+}
+
 body.dark .data_grid ul.disabled div {
 	opacity: 0.4;
 }

@@ -57,11 +57,11 @@ Page.Categories = class Categories extends Page.PageUtils {
 		this.categories = resp.rows;
 		
 		// NOTE: Don't change these columns without also changing the responsive css column collapse rules in style.css
-		var cols = ['<i class="mdi mdi-menu"></i>', 'Category Title', 'Category ID', 'Events', 'Author', 'Created', 'Actions'];
+		var cols = ['<i class="mdi mdi-drag-horizontal" title="Use row drag handles to reorder"></i>', 'Category Title', 'Category ID', 'Events', 'Author', 'Created', 'Actions'];
 		// if (app.isCategoryLimited()) cols.shift();
 		
-		var drag_handle = app.isCategoryLimited() ? '<div class="td_drag_handle" style="cursor:default"><i class="mdi mdi-menu"></i></div>' : 
-			'<div class="td_drag_handle" draggable="true" title="Drag to reorder"><i class="mdi mdi-menu"></i></div>';
+		var drag_handle = app.isCategoryLimited() ? '<div class="td_drag_handle" style="cursor:default"><i class="mdi mdi-drag-horizontal"></i></div>' : 
+			'<div class="td_drag_handle" draggable="true" title="Drag to reorder"><i class="mdi mdi-drag-horizontal"></i></div>';
 		
 		html += '<div class="box">';
 		html += '<div class="box_title">';

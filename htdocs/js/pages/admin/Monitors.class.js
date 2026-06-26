@@ -57,7 +57,7 @@ Page.Monitors = class Monitors extends Page.PageUtils {
 		this.monitors = resp.rows;
 		
 		// NOTE: Don't change these columns without also changing the responsive css column collapse rules in style.css
-		var cols = ['<i class="mdi mdi-menu"></i>', 'Monitor Title', 'Monitor ID', 'Groups', 'Author', 'Created', 'Actions'];
+		var cols = ['<i class="mdi mdi-drag-horizontal" title="Use row drag handles to reorder"></i>', 'Monitor Title', 'Monitor ID', 'Groups', 'Author', 'Created', 'Actions'];
 		
 		html += '<div class="box">';
 		html += '<div class="box_title">';
@@ -78,7 +78,7 @@ Page.Monitors = class Monitors extends Page.PageUtils {
 			if (app.hasPrivilege('delete_monitors')) actions.push( '<button class="link danger" onClick="$P().delete_monitor('+idx+')"><b>Delete</b></button>' );
 			
 			var tds = [
-				'<div class="td_drag_handle" draggable="true" title="Drag to reorder"><i class="mdi mdi-menu"></i></div>',
+				'<div class="td_drag_handle" draggable="true" title="Drag to reorder"><i class="mdi mdi-drag-horizontal"></i></div>',
 				'<b>' + self.getNiceMonitor(item, app.hasPrivilege('edit_monitors')) + '</b>',
 				'<span class="mono">' + item.id + '</span>',
 				self.getNiceGroupList(item.groups, '(All)'),

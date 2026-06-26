@@ -66,11 +66,11 @@ Page.Groups = class Groups extends Page.ServerUtils {
 		this.groups = resp.rows;
 		
 		// NOTE: Don't change these columns without also changing the responsive css column collapse rules in style.css
-		var cols = ['<i class="mdi mdi-menu"></i>', 'Group Title', 'Group ID', 'Servers', 'Hostname Pattern', 'Author', 'Created', 'Actions'];
+		var cols = ['<i class="mdi mdi-drag-horizontal" title="Use row drag handles to reorder"></i>', 'Group Title', 'Group ID', 'Servers', 'Hostname Pattern', 'Author', 'Created', 'Actions'];
 		// if (app.isGroupLimited()) cols.shift();
 		
-		var drag_handle = app.isGroupLimited() ? '<div class="td_drag_handle" style="cursor:default"><i class="mdi mdi-menu"></i></div>' : 
-			'<div class="td_drag_handle" draggable="true" title="Drag to reorder"><i class="mdi mdi-menu"></i></div>';
+		var drag_handle = app.isGroupLimited() ? '<div class="td_drag_handle" style="cursor:default"><i class="mdi mdi-drag-horizontal"></i></div>' : 
+			'<div class="td_drag_handle" draggable="true" title="Drag to reorder"><i class="mdi mdi-drag-horizontal"></i></div>';
 		
 		html += '<div class="box">';
 		html += '<div class="box_title">';
