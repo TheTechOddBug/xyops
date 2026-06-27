@@ -51,6 +51,10 @@ app.extend({
 		delete resp.code;
 		window.config = resp.config;
 		
+		// add our custom icon names
+		iconFontNames.push('xyops');
+		iconFontNames.sort();
+		
 		// add progress bar into CodeEditor
 		CodeEditor.showProgress = Dialog.showProgress;
 		CodeEditor.hideProgress = Dialog.hideProgress;
