@@ -254,6 +254,11 @@ body.dark .button.delete {
 	border: 1px solid var(--pink-highlight);
 }
 
+.button.pink:hover {
+	color: var(--pink);
+	border: 1px solid var(--pink);
+}
+
 button.link.outdated {
 	color: var(--orange);
 	font-weight: bold;
