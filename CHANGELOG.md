@@ -1,5 +1,15 @@
 # xyOps Changelog
 
+## Version v1.0.79
+
+> July 7, 2026
+
+- [`32227052`](https://github.com/pixlcore/xyops/commit/3222705275f8b1b1b91d19d18fd3e8324ec8db26): Version 1.0.79
+- [`e21f3bdb`](https://github.com/pixlcore/xyops/commit/e21f3bdb39816016a3913720338a25701127163d): Feature: Add robustness to Linux satellite install and upgrade scripts, to properly handle network issues during download.
+- [`edf48c44`](https://github.com/pixlcore/xyops/commit/edf48c44212fdf24327160afbc0ddc58de5ae2a8): Meta: Delete unused "locale" folder inside sample config.
+- [`0c139cb8`](https://github.com/pixlcore/xyops/commit/0c139cb86c8d365e7287ee35def06820f2b19476): Bug Fix: Least CPU and Least Mem algorithms could select a server outside of the target set.
+- [`a41b30ec`](https://github.com/pixlcore/xyops/commit/a41b30ec7852fe3fbebda7d5cde981cbcfff71c0): Bug Fix: Possible crasher during upgrade with active job set to "Least Monitor Value" algorithms.
+
 ## Version v1.0.78
 
 > July 6, 2026
