@@ -16,6 +16,7 @@ Page.Alerts = class Alerts extends Page.PageUtils {
 		if (!this.requireLogin(args)) return true;
 		
 		if (!args) args = {};
+		if (!args.sub && args.id) args.sub = 'view';
 		if (!args.sub) args.sub = this.default_sub;
 		this.args = args;
 		
