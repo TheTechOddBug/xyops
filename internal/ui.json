@@ -460,7 +460,7 @@
 				"placeholder": "Select tags for workflow..."
 			},
 			"d_wf_user_fields": {
-				"label": "User Fields:",
+				"label": "User Parameters:",
 				"caption": "Optionally define custom parameters to be collected when a user runs your workflow manually."
 			},
 			"d_wf_res_limits": {

@@ -2822,7 +2822,7 @@ Page.Events = class Events extends Page.PageUtils {
 		
 		// user fields
 		html += this.getFormRow({
-			label: 'User Fields:',
+			label: 'User Parameters:',
 			content: '<div id="d_params_table"></div>',
 			caption: 'Optionally define a custom set of extra parameters to be collected when a user runs your event manually.'
 		});
