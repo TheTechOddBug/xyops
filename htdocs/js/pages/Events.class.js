@@ -1535,6 +1535,9 @@ Page.Events = class Events extends Page.PageUtils {
 			return;
 		}
 		
+		// job data may not be perfectly sorted, due to parallel completes
+		sort_by( this.jobs, 'completed', { type: 'number', dir: -1 } );
+		
 		var perf_keys = {};
 		var perf_data = [];
 		var perf_times = [];
