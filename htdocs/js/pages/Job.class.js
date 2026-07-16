@@ -1676,6 +1676,8 @@ Page.Job = class Job extends Page.PageUtils {
 		
 		if (!this.active || !this.job) return;
 		if (!job.jobs || !job.jobs.length) return;
+		if (this.gotAdditionalJobs) return;
+		
 		var ids = job.jobs.map( function(item) { return item.id; } );
 		
 		app.api.post( 'app/get_jobs', { ids: ids }, function(resp) {
@@ -1684,6 +1686,9 @@ Page.Job = class Job extends Page.PageUtils {
 			var jobs = resp.jobs || [];
 			var cols = ["Job ID", "Reason", "Event/Plugin", "Category", "Plugin", "Server", "Result"];
 			var html = '';
+			
+			// set flag if all jobs are settled, to prevent additional API requests
+			self.gotAdditionalJobs = jobs.every( item => !!item.final );
 			
 			var grid_args = {
 				rows: jobs,
@@ -3387,10 +3392,7 @@ Page.Job = class Job extends Page.PageUtils {
 	
 	onStatusUpdate(data) {
 		// hook main app status update (every 1s)
-		// use this as a condition to update live job in progress
-		if (this.job && this.job.final && data.jobsChanged) this.getAdditionalJobsDebounce();
-		
-		if (!this.job || (this.job.state == 'complete')) return;
+		if (!this.job) return; // sanity
 		
 		var old_state = this.job.state;
 		var old_redraw = this.job.redraw || '';
@@ -3428,17 +3430,19 @@ Page.Job = class Job extends Page.PageUtils {
 			return;
 		}
 		
-		// for workflows, if jobs changed, redraw our special table
-		if (this.isWorkflow && data.jobsChanged) this.renderWorkflowJobsDebounce();
+		// more expensive updates for jobsChanged
+		if (data.jobsChanged) {
+			// for workflows, if jobs changed, redraw our special table
+			// (This MAY happen after completion as well, as the jobsChanged status update is delayed until the next tick)
+			if (this.isWorkflow) this.renderWorkflowJobsDebounce();
+			
+			// if jobs changed, update suspension status
+			if (!this.job.final) this.updateSuspensionStatus();
+			
+			// additional jobs may have launched post-completion
+			if (this.job.final) this.getAdditionalJobsDebounce();
+		}
 		
-		// if jobs changed, update suspension status
-		if (data.jobsChanged) this.updateSuspensionStatus();
-		
-		// if (!updates || ((old_state != 'complete') && (this.job.state == 'complete'))) {
-		// 	// job has completed under our noses!  reload page!
-		// 	Debug.trace('job', "Job has completed, refreshing page");
-		// 	Nav.refresh();
-		// }
 	}
 	
 	onPageUpdate(pcmd, pdata) {
@@ -3532,6 +3536,7 @@ Page.Job = class Job extends Page.PageUtils {
 		delete this.slideIdx;
 		delete this.files;
 		delete this.wjsInProgress;
+		delete this.gotAdditionalJobs;
 		
 		// destroy charts if applicable
 		if (this.charts) {
