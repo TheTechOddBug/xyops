@@ -37,6 +37,7 @@
 	
 	"max_jobs_per_min": 100,
 	"max_jobs_per_workflow": 1000,
+	"scheduler_stagger_ms": 50,
 	"dead_job_timeout": 120,
 	"stale_alert_timeout": 90,
 	

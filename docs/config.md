@@ -87,6 +87,11 @@ This is designed as a runaway e-brake mechanism, to prevent an erroneous workflo
 
 This number sets a global limit on the number of sub-jobs allowed per workflow run (default: `1000`).  Additional jobs are prevented from launching, and the workflow is aborted.
 
+## scheduler_stagger_ms
+<!-- Title: Scheduler Launch Stagger (milliseconds) -->
+
+This number sets the delay between parallel scheduled job launches, in milliseconds (default: `50`).  It insures a large amount of job launches at the same instant won't stall the system.
+
 ## dead_job_timeout
 <!-- Title: Dead Job TImeout (seconds) -->
 

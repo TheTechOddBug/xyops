@@ -6,7 +6,7 @@ async function sleep(ms) {
 	await new Promise(res => setTimeout(res, ms));
 }
 
-function testTriggers(ctx, triggers, epoch) {
+async function testTriggers(ctx, triggers, epoch) {
 	// test a set of triggers in our test event
 	let self = ctx;
 	let xy = self.xy;
@@ -26,15 +26,24 @@ function testTriggers(ctx, triggers, epoch) {
 		if (callback) callback(null, job.id);
 	};
 	
-	// run scheduler tick with custom time args (all happens in same thread)
-	xy.schedulerMinuteTick({ epoch });
-	
-	// restore everything
-	event.triggers = old_triggers;
-	xy.launchJob = old_launchJob;
-	
-	// return array of launched jobs
-	return jobs;
+	try {
+		// run scheduler tick with custom time args
+		xy.schedulerMinuteTick({ epoch });
+		
+		// scheduled launches are staggered, so wait for the entire queue to drain
+		await new Promise( function(resolve) {
+			if (xy.launchQueue.idle()) return resolve();
+			xy.launchQueue.drain = resolve;
+		} );
+		
+		// return array of launched jobs
+		return jobs;
+	}
+	finally {
+		// always restore everything after all queued launches have completed
+		event.triggers = old_triggers;
+		xy.launchJob = old_launchJob;
+	}
 }
 
 exports.tests = [
@@ -69,7 +78,7 @@ exports.tests = [
 				"minutes": [ 28 ]
 			}
 		];
-		let jobs = testTriggers(this, triggers, epoch);
+		let jobs = await testTriggers(this, triggers, epoch);
 		assert.ok( jobs.length == 0, "expected 0 jobs to launch" );
 	},
 	
@@ -83,7 +92,7 @@ exports.tests = [
 				"minutes": []
 			}
 		];
-		let jobs = testTriggers(this, triggers, epoch);
+		let jobs = await testTriggers(this, triggers, epoch);
 		assert.ok( jobs.length == 1, "expected 1 job to launch" );
 	},
 	
@@ -97,7 +106,7 @@ exports.tests = [
 				"minutes": [ 29 ]
 			}
 		];
-		let jobs = testTriggers(this, triggers, epoch);
+		let jobs = await testTriggers(this, triggers, epoch);
 		assert.ok( jobs.length == 1, "expected 1 job to launch" );
 	},
 	
@@ -112,7 +121,7 @@ exports.tests = [
 				"minutes": [ 29 ]
 			}
 		];
-		let jobs = testTriggers(this, triggers, epoch);
+		let jobs = await testTriggers(this, triggers, epoch);
 		assert.ok( jobs.length == 1, "expected 1 job to launch" );
 	},
 	
@@ -128,7 +137,7 @@ exports.tests = [
 				"minutes": [ 29 ]
 			}
 		];
-		let jobs = testTriggers(this, triggers, epoch);
+		let jobs = await testTriggers(this, triggers, epoch);
 		assert.ok( jobs.length == 1, "expected 1 job to launch" );
 	},
 	
@@ -145,7 +154,7 @@ exports.tests = [
 				"minutes": [ 29 ]
 			}
 		];
-		let jobs = testTriggers(this, triggers, epoch);
+		let jobs = await testTriggers(this, triggers, epoch);
 		assert.ok( jobs.length == 1, "expected 1 job to launch" );
 	},
 	
@@ -163,7 +172,7 @@ exports.tests = [
 				"minutes": [ 29 ]
 			}
 		];
-		let jobs = testTriggers(this, triggers, epoch);
+		let jobs = await testTriggers(this, triggers, epoch);
 		assert.ok( jobs.length == 1, "expected 1 job to launch" );
 	},
 	
@@ -182,7 +191,7 @@ exports.tests = [
 				"minutes": [ 29 ]
 			}
 		];
-		let jobs = testTriggers(this, triggers, epoch);
+		let jobs = await testTriggers(this, triggers, epoch);
 		assert.ok( jobs.length == 1, "expected 1 job to launch" );
 	},
 	
@@ -201,7 +210,7 @@ exports.tests = [
 				"minutes": [ 29 ]
 			}
 		];
-		let jobs = testTriggers(this, triggers, epoch);
+		let jobs = await testTriggers(this, triggers, epoch);
 		assert.ok( jobs.length == 0, "expected 0 jobs to launch" );
 	},
 	
@@ -217,7 +226,7 @@ exports.tests = [
 				"timezone": "America/New_York"
 			}
 		];
-		let jobs = testTriggers(this, triggers, epoch);
+		let jobs = await testTriggers(this, triggers, epoch);
 		assert.ok( jobs.length == 1, "expected 1 job to launch" );
 	},
 	
@@ -233,7 +242,7 @@ exports.tests = [
 				"timezone": "America/New_York"
 			}
 		];
-		let jobs = testTriggers(this, triggers, epoch);
+		let jobs = await testTriggers(this, triggers, epoch);
 		assert.ok( jobs.length == 0, "expected 0 jobs to launch" );
 	},
 	
@@ -248,7 +257,7 @@ exports.tests = [
 				"start": 1766111250
 			}
 		];
-		let jobs = testTriggers(this, triggers, epoch);
+		let jobs = await testTriggers(this, triggers, epoch);
 		assert.ok( jobs.length == 1, "expected 1 job to launch" );
 	},
 	
@@ -263,7 +272,7 @@ exports.tests = [
 				"start": epoch
 			}
 		];
-		let jobs = testTriggers(this, triggers, epoch);
+		let jobs = await testTriggers(this, triggers, epoch);
 		assert.ok( jobs.length == 2, "expected 2 jobs to launch" );
 		
 		// make sure jobs are spaced correctly
@@ -284,7 +293,7 @@ exports.tests = [
 				"epoch": epoch
 			}
 		];
-		let jobs = testTriggers(this, triggers, epoch);
+		let jobs = await testTriggers(this, triggers, epoch);
 		assert.ok( jobs.length == 1, "expected 1 job to launch" );
 	},
 	
@@ -306,7 +315,7 @@ exports.tests = [
 		// set cursor state for event, set to 30 min in the past
 		this.xy.putState( 'events/' + this.schedule_event_id + '/cursor', epoch - 1800 );
 		
-		let jobs = testTriggers(this, triggers, epoch);
+		let jobs = await testTriggers(this, triggers, epoch);
 		assert.ok( jobs.length == 3, "expected 3 jobs to launch" );
 		
 		// make sure jobs are set to the correct now times for catch-up
@@ -331,7 +340,7 @@ exports.tests = [
 				"end": epoch + 30
 			}
 		];
-		let jobs = testTriggers(this, triggers, epoch);
+		let jobs = await testTriggers(this, triggers, epoch);
 		assert.ok( jobs.length == 1, "expected 1 job to launch" );
 	},
 	
@@ -351,7 +360,7 @@ exports.tests = [
 				"end": epoch + 3600
 			}
 		];
-		let jobs = testTriggers(this, triggers, epoch);
+		let jobs = await testTriggers(this, triggers, epoch);
 		assert.ok( jobs.length == 0, "expected 0 jobs to launch" );
 	},
 	
@@ -371,7 +380,7 @@ exports.tests = [
 				"end": epoch + 30
 			}
 		];
-		let jobs = testTriggers(this, triggers, epoch);
+		let jobs = await testTriggers(this, triggers, epoch);
 		assert.ok( jobs.length == 0, "expected 0 jobs to launch" );
 	},
 	
@@ -391,7 +400,7 @@ exports.tests = [
 				"end": epoch + 3600
 			}
 		];
-		let jobs = testTriggers(this, triggers, epoch);
+		let jobs = await testTriggers(this, triggers, epoch);
 		assert.ok( jobs.length == 1, "expected 1 job to launch" );
 	},
 	
@@ -410,7 +419,7 @@ exports.tests = [
 				"duration": 30
 			}
 		];
-		let jobs = testTriggers(this, triggers, epoch);
+		let jobs = await testTriggers(this, triggers, epoch);
 		assert.ok( jobs.length == 1, "expected 1 job to launch" );
 		assert.ok( jobs[0].state == 'start_delay', "expected job state to be start_delay" );
 		assert.ok( jobs[0].until == epoch + 30, "expected job until to be epoch+30" );
@@ -431,7 +440,7 @@ exports.tests = [
 				"seconds": [ 0, 15, 30, 45 ]
 			}
 		];
-		let jobs = testTriggers(this, triggers, epoch);
+		let jobs = await testTriggers(this, triggers, epoch);
 		assert.ok( jobs.length == 4, "expected 4 jobs to launch" );
 		
 		assert.ok( jobs[0].state == 'start_delay', "expected job idx 0 state to be start_delay" );
@@ -483,7 +492,7 @@ exports.tests = [
 				"params": {}
 			}
 		];
-		let jobs = testTriggers(this, triggers, epoch);
+		let jobs = await testTriggers(this, triggers, epoch);
 		assert.ok( jobs.length == 0, "expected 0 jobs to launch immediately" );
 		
 		// job will launch deferred, so we have to wait for it
