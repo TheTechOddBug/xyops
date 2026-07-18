@@ -645,3 +645,76 @@ After the update, the conductor will rejoin the cluster with the correct key.
 - Confirm node health beforehand to avoid manual recovery steps.
 - Store the current key securely and restrict SSH access to conductors.
 - Rotate periodically as part of your security program (see [Security Checklist](scaling.md#security-checklist)).
+
+## Preferred Conductors
+
+By default, primary selection in a multi-conductor cluster is "sticky."  Once a conductor becomes primary, it remains primary indefinitely, even if a higher-ranked conductor later comes back online.  The cluster only selects a different primary when the current one shuts down, restarts, or suffers a hardware failure.
+
+Configuring **Preferred Conductors** changes this behavior.  As soon as the preferred conductor list contains at least one hostname, xyOps enables active primary handoffs.  A lower-ranked primary will routinely check for higher-ranked preferred conductors and automatically relinquish command when one becomes eligible.  The cluster then holds a new election, allowing the preferred conductor to take over as primary.
+
+This allows the cluster to fail over normally when a preferred conductor is unavailable, and then automatically return command when that conductor comes back online.  For example, you can designate your main production conductor as preferred.  A backup can become primary during an outage, but it will step aside after the preferred conductor returns, reconnects, and meets the minimum age requirement.
+
+### Active Primary Handoffs
+
+The current primary checks its connected peers once per minute, on the `:30` second, to see whether it should relinquish command.  A peer is eligible to take over when:
+
+- It is included in the Preferred Conductors list.
+- It outranks the current primary.  If the current primary is not in the list, every listed conductor outranks it.
+- It is online and connected to the current primary.
+- Its connection has met the configured **Relinquish Minimum Age**.
+
+The minimum age prevents a newly connected or unstable peer from immediately causing a primary change.  It is measured in seconds from the peer's most recent connection, and defaults to `60` seconds.
+
+You can also enable **Relinquish Wait For Jobs**.  When enabled, the primary defers relinquishing command while active jobs are running, then checks again on the next minute.  When disabled, active jobs do not delay the relinquish operation.  Internal system jobs (i.e. daily maintenance, DB optimization, etc.) always prevent relinquishing until they have completed.
+
+### Election Ranking
+
+The preferred list also controls candidate ranking whenever the cluster holds an election.  By default, xyOps ranks all online conductor candidates alphabetically by hostname, and the first available hostname becomes primary.  With Preferred Conductors configured, hostnames in the list are ranked first, in the exact order you specify.  All unlisted conductors follow them in alphabetical order.
+
+For example, consider this cluster:
+
+```text
+xyops01.internal.mycompany.com
+xyops02.internal.mycompany.com
+xyops03.internal.mycompany.com
+```
+
+With the following preferred list:
+
+```json
+[ "xyops03.internal.mycompany.com", "xyops02.internal.mycompany.com" ]
+```
+
+The effective election order is:
+
+1. `xyops03.internal.mycompany.com`
+2. `xyops02.internal.mycompany.com`
+3. `xyops01.internal.mycompany.com`
+
+You do not need to include every conductor.  A list containing only `xyops03.internal.mycompany.com` ranks that server above all the others and activates automatic handoffs to it.  The remaining servers retain their alphabetical order.  Unlisted conductors are still valid election candidates and can become primary whenever all higher-ranked online candidates are unavailable.  If the preferred list is empty, xyOps uses the original sticky primary behavior and alphabetical election ranking.
+
+### Configuration
+
+You can edit these settings in the **Server Configuration** page in the xyOps UI, or configure them directly inside the [`multi`](config.md#multi) object in `/opt/xyops/conf/config.json`:
+
+```json
+"multi": {
+	"preferred_conductors": [
+		"xyops03.internal.mycompany.com",
+		"xyops02.internal.mycompany.com"
+	],
+	"relinquish_min_age": 60,
+	"relinquish_wait_jobs": true
+}
+```
+
+The three properties are:
+
+| Property | Description |
+|----------|-------------|
+| [`multi.preferred_conductors`](config.md#multipreferred_conductors) | An array of exact conductor hostnames, ordered from highest to lowest priority. |
+| [`multi.relinquish_min_age`](config.md#multirelinquish_min_age) | The minimum peer connection age, in seconds, required before the primary will relinquish command.  The default is `60`. |
+| [`multi.relinquish_wait_jobs`](config.md#multirelinquish_wait_jobs) | When `true`, wait for active jobs to complete before relinquishing command.  The default is `false`. |
+
+> [!IMPORTANT]
+> All conductor servers **must agree** on the same Preferred Conductors list and relinquish settings.  Changes made on the **Server Configuration** page are automatically synchronized across all conductor servers.  If you edit the raw `config.json` file instead, you must apply the same list, in the same order, and the same relinquish settings to every conductor server yourself.

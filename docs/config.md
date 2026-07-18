@@ -448,7 +448,20 @@ Default:
 { "rejectUnauthorized": false }
 ```
 
+### multi.preferred_conductors
+<!-- Title: Preferred Conductors -->
 
+This optional array lists your preferred conductor servers (by their exact hostnames), in order from highest to lowest priority.  If a preferred conductor is online and outranks the current primary (or the current primary is not preferred), and it satisfies the minimum age requirement, the current primary will relinquish command.
+
+### multi.relinquish_min_age
+<!-- Title: Relinquish Minimum Age (seconds) -->
+
+The minimum "age" of a peer conductor (time since last connect in seconds) that must be met before the current primary conductor will consider relinquishing command to it.  This field is only applicable if you specify a list of preferred conductors.
+
+### multi.relinquish_wait_jobs
+<!-- Title: Relinquish Wait For Jobs -->
+
+When checked, the peer relinquish operation will wait for all active jobs to complete, before the current primary conductor relinquishes command to a higher-ranked preferred one.  This field is only applicable if you specify a list of preferred conductors.
 
 ## satellite
 <!-- Title: xyOps Satellite Settings -->
