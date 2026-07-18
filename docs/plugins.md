@@ -988,14 +988,15 @@ An optional "variant" property may be included, which changes the visible UI con
 | `datetime-local` | A native local date and time picker, rendered as `<input type="datetime-local">`. |
 | `email` | A single-line email field with browser email validation, rendered as `<input type="email">`. |
 | `number` | A numeric input, usually with spinner controls and numeric validation, rendered as `<input type="number">`. |
+| `password` | A visually masked single-line field, rendered as `<input type="password">`. |
 | `text` | A standard single-line text field, rendered as `<input type="text">`. |
 | `time` | A native time picker, rendered as `<input type="time">`. |
 | `tel` | A telephone-style text field, usually with a phone keypad on mobile browsers, rendered as `<input type="tel">`. |
 | `url` | A single-line URL field with browser URL validation, rendered as `<input type="url">`. |
 
-Note that the parameter value is almost always set to a string -- the "variant" only controls the visual UI control and behavior.  However, the "number" variant is a special case, where the value will actually be parsed and stored in the parameters as an actual JavaScript Number, or `null` when empty.
+Note that the parameter value is almost always set to a string -- the "variant" only controls the visual UI control and behavior.  However, the `number` variant is a special case, where the value will actually be parsed and stored in the parameters as an actual [JavaScript Number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number), or `null` when empty.
 
-The "number" variant is also special in that you can specify a `range` property (string), which limits the minimum, maximum, and step increment for the value.  The range should be in the format: `MIN - MAX / STEP`.  So for example, to limit the number range from 0 to 100 with increments of 5, use `0 - 100 / 5`.  Floats and negatives are allowed, and the step can be the special keyword `any` (for no enforced step increment).
+The `number` variant is also special in that you can specify a `range` property (string), which limits the minimum, maximum, and step increment for the value.  The range should be in the format: `MIN - MAX / STEP`.  So for example, to limit the number range from 0 to 100 with increments of 5, use `0 - 100 / 5`.  Floats and negatives are allowed, and the step can be the special keyword `any` (for no enforced step increment).
 
 Example text parameter definition:
 
@@ -1026,6 +1027,9 @@ Example number variant definition:
 	"required": true
 }
 ```
+
+> [!NOTE]
+> The `password` text variant only masks the value while the user is entering it, which can help protect against prying eyes and shoulder surfing.  For example, it can be useful on a [Magic Link](triggers.md#magic-link) form.  It does not encrypt the value or store it as a secret.  After submission, the value becomes a regular plain-text parameter on the event or job, and any xyOps user with access to the event or category can easily retrieve it.  Event and job detail screens initially hide the value behind a "Click to View" link, but this is only a visual convenience.  Use a [Secret Vault](secrets.md) for sensitive values that require actual protection.
 
 ### Textarea
 
