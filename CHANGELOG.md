@@ -1,5 +1,14 @@
 # xyOps Changelog
 
+## Version v1.0.84
+
+> July 20, 2026
+
+- [`6c8559a6`](https://github.com/pixlcore/xyops/commit/6c8559a632c59045f77836189da17d06433cd7d2): Version 1.0.84
+- [`168cf55e`](https://github.com/pixlcore/xyops/commit/168cf55e0f7ed6f60c05c0ea514f39c0387f04d6): API: Add new `get_multiple` endpoint for fetching multiple lists at once.
+- [`f04fd209`](https://github.com/pixlcore/xyops/commit/f04fd209848f540e534473478b489ed4c9434bc3): Feature: Preferred Conductors, for active primary handoff.  Fixes #375.
+- [`a14dfacb`](https://github.com/pixlcore/xyops/commit/a14dfacbba979215c46f5fe536a0dd6908d7d109): Docs: Plugins: Describe new "password" text field variant, and add a note about data handling.
+
 ## Version v1.0.83
 
 > July 16, 2026
