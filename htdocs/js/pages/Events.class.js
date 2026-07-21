@@ -526,7 +526,7 @@ Page.Events = class Events extends Page.PageUtils {
 		
 		// target
 		if ('target' in args) {
-			if (!item.targets.includes(args.target)) return false; // hide
+			if (!item.targets || !item.targets.includes(args.target)) return false; // hide
 		}
 		
 		// plugin
