@@ -2335,10 +2335,17 @@ Page.Events = class Events extends Page.PageUtils {
 		var self = this;
 		var title = this.workflow ? "Test Workflow" : "Test Event";
 		var btn = ['open-in-new', 'Run Now'];
+		var event = null;
 		
-		app.clearError();
-		var event = this.get_event_form_json();
-		if (!event) return; // error
+		if (this.args.sub == 'edit') {
+			app.clearError();
+			event = this.get_event_form_json();
+			if (!event) return; // error
+		}
+		else {
+			event = this.event;
+			if (!event) return; // sanity
+		}
 		
 		var html = '';
 		html += `<div class="dialog_intro">Use this form to test the event in its current state.  This runs an ad-hoc test job with your edits, and any custom settings below.  The test will launch in a new browser tab in order to preserve your current context.</div>`;

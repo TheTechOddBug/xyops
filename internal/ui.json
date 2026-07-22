@@ -1011,7 +1011,8 @@
 		},
 		"Events": {
 			"do_edit_from_view": { "sub": "view", "keys": ["KeyE"], "title": "Edit Event or Workflow" },
-			"do_run_current_event": { "sub": "view", "keys": ["KeyR"], "title": "Run Current Event" }
+			"do_run_current_event": { "sub": "view", "keys": ["KeyR"], "title": "Run Current Event" },
+			"do_test_event": { "sub": "view", "keys": ["KeyT"], "title": "Test Current Event" }
 		},
 		"Workflows": {
 			"cancelSolder": { "keys": ["Escape"], "title": "Cancel Solder" },
